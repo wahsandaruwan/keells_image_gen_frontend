@@ -13,6 +13,9 @@ import {
   FacebookIcon,
   TwitterIcon,
 } from "react-share";
+import { Recaptcha } from "../../components/atoms";
+import { CgLogOff } from "react-icons/cg";
+import { MdOutlineArrowBack } from "react-icons/md";
 
 const User = () => {
   const [sunAnimation, setSunAnimation] = useState(null);
@@ -30,6 +33,7 @@ const User = () => {
     "https://picsum.photos/200/300"
   );
   const [isOpenShareIcons, setIsOpenShareIcons] = useState(false);
+  const [recaptchaVerified, setRecaptchaVerified] = useState(false);
   const Navigate = useNavigate();
 
   useEffect(() => {
@@ -42,13 +46,21 @@ const User = () => {
   }, []);
 
   const HandelLogOutButon = () => {
-    Navigate("/");
+    const confirmLogout = window.confirm("Are you sure you want to log out?");
+    if (confirmLogout) {
+      Navigate("/");
+    }
   };
 
   const HandelGenerateButton = () => {
     if (!isOpenPromtArea) {
       setIsOpenPromtArea(true); // Open prompt area if it's not open
     } else {
+      if (!recaptchaVerified) {
+        alert("Please verify the reCAPTCHA first.");
+        return;
+      }
+
       setIsLoad(true); // Start loading while the image is being generated
       setTimeout(() => {
         setIsLoad(false); // Stop loading after 2 seconds
@@ -96,6 +108,7 @@ const User = () => {
     setIsLoad(false);
     setPrompt("");
     setAttemptsLeft(3);
+    setRecaptchaVerified(false);
   };
 
   const HandelShareButtonClick = () => {
@@ -111,16 +124,16 @@ const User = () => {
       <div className=" w-full relative sm:w-[550px] flex flex-col items-center gap-10 md:w-[700px] bg-slate-100 px-8 py-8 lg:w-[800px] rounded-lg shadows-lg justify-center shadow-2xl min-h-[70vh]">
         <button
           onClick={HandelLogOutButon}
-          className="cursor-pointer px-4 py-2 bg-[#c1d6bb] text-slate-900 hover:text-red-500 transition-all duration-300 rounded-lg font-semibold z-50 absolute top-5 left-5 "
+          className="cursor-pointer w-[55px] h-[55px] flex items-center justify-center text-2xl sm:text-3xl bg-[#c1d6bb] text-slate-900 hover:text-red-500 transition-all duration-300 rounded-lg font-semibold z-50 absolute top-5 left-5"
         >
-          Log Out
+          <CgLogOff />
         </button>
         {isOpenPromtArea && sampleImage && (
           <button
             onClick={HandelBackButton}
-            className="cursor-pointer px-4 py-2 bg-[#c1d6bb] text-slate-900 hover:text-red-500 transition-all duration-300 rounded-lg font-semibold z-50 absolute bottom-5 left-5 "
+            className="cursor-pointer w-[55px] h-[55px] flex items-center justify-center text-2xl sm:text-3xl bg-[#c1d6bb] text-slate-900 hover:text-red-500 transition-all duration-300 rounded-lg font-semibold z-50 absolute bottom-5 left-5"
           >
-            Back
+            <MdOutlineArrowBack />
           </button>
         )}
 
@@ -152,6 +165,9 @@ const User = () => {
               className="w-full h-32 p-3 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#6cd454]"
               placeholder="Type your prompt here..."
             />
+            <div className="flex items-center justify-center w-full">
+              <Recaptcha onVerify={setRecaptchaVerified} />
+            </div>
           </div>
         )}
         {isLoad && <Loader />}

@@ -3,6 +3,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 
 const Recaptcha = ({ onVerify }) => {
   const [Verified, setVerified] = useState(false);
+  const SiteKey = import.meta.env.VITE_SITE_KEY;
 
   const HandleRecaptchaChange = (token) => {
     if (token) {
@@ -10,13 +11,9 @@ const Recaptcha = ({ onVerify }) => {
       onVerify(true);
     }
   };
-
   return (
     <div className="mt-5">
-      <ReCAPTCHA
-        sitekey="6Lf8o_0qAAAAADJm5saVO2TbgiKjFoN3GaQneuBm"
-        onChange={HandleRecaptchaChange}
-      />
+      <ReCAPTCHA sitekey={SiteKey} onChange={HandleRecaptchaChange} />
     </div>
   );
 };
