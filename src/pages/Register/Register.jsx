@@ -38,7 +38,7 @@ const Register = () => {
 
           <div className="flex flex-col w-2/3">
             <label className="text-sm md:text-lg font-bold text-gray-700 mb-2">
-              NIC <span className="text-red-500 text-lg">*</span>
+              Code <span className="text-red-500 text-lg">*</span>
             </label>
             <input
               placeholder="Enter Your NIC"
