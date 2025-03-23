@@ -3,18 +3,24 @@ import { Images, Animations } from "../../constants";
 import { useNavigate } from "react-router";
 import { TypeAnimation } from "react-type-animation";
 import Lottie from "lottie-react";
+import { Recaptcha } from "../../components/atoms";
 
 const Home = () => {
   const [sunAnimation, setSunAnimation] = useState(null);
   const [isOTPOpen, setIsOTPOpen] = useState(false);
   const [OTP, setOTP] = useState(["", "", "", ""]);
   const [showOTP, setShowOTP] = useState(false);
+  const [recaptchaVerified, setRecaptchaVerified] = useState(false);
   const inputsRef = useRef([]);
   const Navigate = useNavigate();
 
   const HandleButtonClick = () => {
     if (!isOTPOpen) {
       setIsOTPOpen(true);
+      return;
+    }
+    if (!recaptchaVerified) {
+      alert("Please verify the reCAPTCHA first.");
       return;
     }
     if (isOTPOpen && !showOTP) {
@@ -84,6 +90,7 @@ const Home = () => {
               placeholder="Enter Mobile Number"
               className="bg-white px-4 py-3 mt-5 rounded-lg border-2 border-gray-300 focus:border-[#6cd454] focus:ring-2 focus:ring-[#6cd454] focus:outline-none transition duration-200"
             />
+            <Recaptcha onVerify={setRecaptchaVerified} />
           </div>
         )}
         {showOTP && (
