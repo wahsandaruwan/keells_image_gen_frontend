@@ -246,17 +246,22 @@ const User = () => {
                   url={sampleImage}
                   subject="Check this image"
                   body="Hey, check this out!"
+                  className="hover:scale-110 duration-300 transition-all"
                 >
                   <EmailIcon size={50} round />
                 </EmailShareButton>
 
-                <FacebookShareButton url={sampleImage}>
+                <FacebookShareButton
+                  url={sampleImage}
+                  className="hover:scale-110 duration-300 transition-all"
+                >
                   <FacebookIcon size={50} round />
                 </FacebookShareButton>
 
                 <WhatsappShareButton
                   url={sampleImage}
                   title="Check out this image"
+                  className="hover:scale-110 duration-300 transition-all"
                 >
                   <WhatsappIcon size={50} round />
                 </WhatsappShareButton>
@@ -264,6 +269,7 @@ const User = () => {
                 <TwitterShareButton
                   url={sampleImage}
                   title="Check out this image"
+                  className="hover:scale-110 duration-300 transition-all"
                 >
                   <TwitterIcon size={50} round />
                 </TwitterShareButton>
