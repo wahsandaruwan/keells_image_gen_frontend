@@ -51,7 +51,7 @@ const Register = () => {
               Code <span className="text-red-500 text-lg">*</span>
             </label>
             <input
-              placeholder="Enter Your NIC"
+              placeholder="Enter Your Code"
               className="bg-white px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-[#6cd454] focus:ring-2 focus:ring-[#6cd454] focus:outline-none transition duration-200"
             />
           </div>
