@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { TypeAnimation } from "react-type-animation";
 import Lottie from "lottie-react";
 import { Recaptcha } from "../../components/atoms";
+import { MobileNumberValidation } from "../../validations";
 
 const Home = () => {
   const [sunAnimation, setSunAnimation] = useState(null);
@@ -11,18 +12,30 @@ const Home = () => {
   const [OTP, setOTP] = useState(["", "", "", ""]);
   const [showOTP, setShowOTP] = useState(false);
   const [recaptchaVerified, setRecaptchaVerified] = useState(false);
+  const [mobile, setMobile] = useState("");
   const inputsRef = useRef([]);
   const Navigate = useNavigate();
 
   const HandleButtonClick = () => {
+    const mobileValidation = MobileNumberValidation(mobile);
+
     if (!isOTPOpen) {
       setIsOTPOpen(true);
       return;
     }
-    if (!recaptchaVerified) {
-      alert("Please verify the reCAPTCHA first.");
+    if (!mobile) {
+      alert("Please enter your mobile number.");
       return;
     }
+    if (!recaptchaVerified) {
+      alert("Please verify the reCAPTCHA.");
+      return;
+    }
+    if (!mobileValidation) {
+      alert("Please enter valid mobile number.");
+      return;
+    }
+
     if (isOTPOpen && !showOTP) {
       setIsOTPOpen(false);
       setShowOTP(true);
@@ -53,6 +66,10 @@ const Home = () => {
   };
 
   const HandelVerifyButtonClick = () => {
+    if (OTP.some((digit) => digit === "")) {
+      alert("Please enter OTP.");
+      return;
+    }
     Navigate("/register");
   };
   return (
@@ -69,11 +86,11 @@ const Home = () => {
           <div className="font-bold">
             <TypeAnimation
               sequence={[
-                "සුභ අලුත් අවුරුද්දක් වේවා",
+                "සුභ අලුත් අවුරුද්දක් වේවා!",
                 500,
-                "புத்தாண்டு நல்வாழ்த்துக்கள்",
+                "புத்தாண்டு நல்வாழ்த்துக்கள்!",
                 500,
-                "Happy New Year",
+                "Happy New Year!",
                 500,
               ]}
               style={{ fontSize: "1.65em" }}
@@ -88,6 +105,7 @@ const Home = () => {
             </span>
             <input
               placeholder="Enter Mobile Number"
+              onChange={(e) => setMobile(e.target.value)}
               className="bg-white px-4 py-3 mt-5 rounded-lg border-2 border-gray-300 focus:border-[#6cd454] focus:ring-2 focus:ring-[#6cd454] focus:outline-none transition duration-200"
             />
             <Recaptcha onVerify={setRecaptchaVerified} />
