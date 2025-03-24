@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Images, Animations } from "../../constants";
-import Lottie from "lottie-react";
+//import Lottie from "lottie-react";
 import { useNavigate } from "react-router";
 import { Loader } from "../../components/atoms";
 import {
@@ -16,6 +16,7 @@ import {
 import { Recaptcha } from "../../components/atoms";
 import { CgLogOff } from "react-icons/cg";
 import { MdOutlineArrowBack } from "react-icons/md";
+import { PromptValidation } from "../../validations";
 
 const User = () => {
   //const [sunAnimation, setSunAnimation] = useState(null);
@@ -56,8 +57,19 @@ const User = () => {
     if (!isOpenPromtArea) {
       setIsOpenPromtArea(true); // Open prompt area if it's not open
     } else {
+      if (!prompt) {
+        alert("Please enter your prompt.");
+        return;
+      }
       if (!recaptchaVerified) {
-        alert("Please verify the reCAPTCHA first.");
+        alert("Please verify the reCAPTCHA.");
+        return;
+      }
+
+      const promptValidation = PromptValidation(prompt);
+
+      if (!promptValidation) {
+        alert("Please enter valid prompt.");
         return;
       }
 
