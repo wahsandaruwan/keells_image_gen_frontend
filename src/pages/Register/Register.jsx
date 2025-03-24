@@ -59,7 +59,7 @@ const Register = () => {
         </div>
         <button
           onClick={HandelRegisterButton}
-          className="bg-[#6cd454] w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black duration-300 transition-all"
+          className="bg-[#6cd454] w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black hover:bg-[#aae49d] duration-300 transition-all"
         >
           Register
         </button>

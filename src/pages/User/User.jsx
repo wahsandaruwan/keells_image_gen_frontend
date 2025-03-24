@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Images, Animations } from "../../constants";
 import Lottie from "lottie-react";
 import { useNavigate } from "react-router";
@@ -18,7 +18,7 @@ import { CgLogOff } from "react-icons/cg";
 import { MdOutlineArrowBack } from "react-icons/md";
 
 const User = () => {
-  const [sunAnimation, setSunAnimation] = useState(null);
+  //const [sunAnimation, setSunAnimation] = useState(null);
   const [isLoad, setIsLoad] = useState(false);
   const [isOpenPromtArea, setIsOpenPromtArea] = useState(false);
   const [viewPreviousImages, setViewPreviousImages] = useState(false);
@@ -36,14 +36,14 @@ const User = () => {
   const [recaptchaVerified, setRecaptchaVerified] = useState(false);
   const Navigate = useNavigate();
 
-  useEffect(() => {
-    // Fetch both animation files
-    Promise.all([fetch(Animations.sun).then((response) => response.json())])
-      .then(([headerData]) => {
-        setSunAnimation(headerData);
-      })
-      .catch((error) => console.error("Failed to load animations:", error));
-  }, []);
+  // useEffect(() => {
+  //   // Fetch both animation files
+  //   Promise.all([fetch(Animations.sun).then((response) => response.json())])
+  //     .then(([headerData]) => {
+  //       setSunAnimation(headerData);
+  //     })
+  //     .catch((error) => console.error("Failed to load animations:", error));
+  // }, []);
 
   const HandelLogOutButon = () => {
     const confirmLogout = window.confirm("Are you sure you want to log out?");
@@ -124,25 +124,25 @@ const User = () => {
       <div className=" w-full relative sm:w-[550px] flex flex-col items-center gap-10 md:w-[700px] bg-slate-100 px-8 py-8 lg:w-[800px] rounded-lg shadows-lg justify-center shadow-2xl min-h-[70vh]">
         <button
           onClick={HandelLogOutButon}
-          className="cursor-pointer w-[55px] h-[55px] flex items-center justify-center text-2xl sm:text-3xl bg-[#c1d6bb] text-slate-900 hover:text-red-500 transition-all duration-300 rounded-lg font-semibold z-50 absolute top-5 left-5"
+          className="cursor-pointer w-[55px] h-[55px] flex items-center justify-center text-2xl sm:text-3xl bg-[#c1d6bb] text-slate-900 hover:text-red-500 transition-all duration-300 rounded-lg font-semibold z-50 absolute top-5 right-5"
         >
           <CgLogOff />
         </button>
         {isOpenPromtArea && sampleImage && (
           <button
             onClick={HandelBackButton}
-            className="cursor-pointer w-[55px] h-[55px] flex items-center justify-center text-2xl sm:text-3xl bg-[#c1d6bb] text-slate-900 hover:text-red-500 transition-all duration-300 rounded-lg font-semibold z-50 absolute bottom-5 left-5"
+            className="cursor-pointer w-[55px] h-[55px] flex items-center justify-center text-2xl sm:text-3xl bg-[#c1d6bb] text-slate-900 hover:text-red-500 transition-all duration-300 rounded-lg font-semibold z-50 absolute top-5 left-5"
           >
             <MdOutlineArrowBack />
           </button>
         )}
 
-        <Lottie
+        {/* <Lottie
           animationData={sunAnimation}
           loop={true}
           className="w-30 z-50 absolute top-5 right-5 md:w-35"
           style={{ background: "transparent" }}
-        />
+        /> */}
         <img src={Images.mainLogo} alt="Logo" className="w-[200px]" />
         {!isOpenPromtArea && !showSample && (
           <span className="text-[2rem] font-bold text-center text-slate-900">
@@ -183,7 +183,7 @@ const User = () => {
           {showSample && (
             <button
               onClick={HandelShareButtonClick}
-              className={`bg-[#6cd454] w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black duration-300 transition-all ${
+              className={`bg-[#6cd454] w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black hover:bg-[#aae49d] duration-300 transition-all ${
                 isOpenShareIcons ? "hidden" : ""
               }`}
             >
@@ -192,7 +192,7 @@ const User = () => {
           )}
           <button
             onClick={HandelGenerateButton}
-            className={`bg-[#6cd454] w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black duration-300 transition-all ${
+            className={`bg-[#6cd454] w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black hover:bg-[#aae49d] duration-300 transition-all ${
               showSample ? "hidden" : ""
             }`}
           >
@@ -202,7 +202,7 @@ const User = () => {
             <button
               disabled={isLoad}
               onClick={HandelViewPreviousImages}
-              className="bg-[#6cd454] w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black duration-300 transition-all"
+              className="bg-[#6cd454] w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black hover:bg-[#aae49d] duration-300 transition-all"
             >
               View Previous Generations
             </button>

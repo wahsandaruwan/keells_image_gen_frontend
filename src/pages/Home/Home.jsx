@@ -129,7 +129,7 @@ const Home = () => {
             </div>
             <button
               onClick={HandelVerifyButtonClick}
-              className="bg-[#6cd454] mt-10 w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black duration-300 transition-all"
+              className="bg-[#6cd454] mt-10 w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black hover:bg-[#aae49d] duration-300 transition-all"
             >
               Verify
             </button>
@@ -137,7 +137,7 @@ const Home = () => {
         )}
         <button
           onClick={HandleButtonClick}
-          className={`bg-[#6cd454] w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black duration-300 transition-all ${
+          className={`bg-[#6cd454] w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black duration-300 hover:bg-[#aae49d] transition-all ${
             showOTP ? "hidden" : ""
           }`}
         >
