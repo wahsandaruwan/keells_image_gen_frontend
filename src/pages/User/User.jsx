@@ -129,21 +129,21 @@ const User = () => {
 
   return (
     <div
-      className={`w-full flex items-center justify-center h-full min-h-[100vh] px-12 ${
+      className={`w-full flex items-center justify-center h-full min-h-[100vh] px-6 sm:px-12 ${
         isLoad ? "bg-black/50 z-50" : " z-0"
       }`}
     >
       <div className=" w-full relative sm:w-[550px] flex flex-col items-center gap-10 md:w-[700px] bg-slate-100 px-8 py-8 lg:w-[800px] rounded-lg shadows-lg justify-center shadow-2xl min-h-[70vh]">
         <button
           onClick={HandelLogOutButon}
-          className="cursor-pointer w-[55px] h-[55px] flex items-center justify-center text-2xl sm:text-3xl bg-[#c1d6bb] text-slate-900 hover:text-red-500 transition-all duration-300 rounded-lg font-semibold z-50 absolute top-5 right-5"
+          className="cursor-pointer w-[40px] h-[40px] sm:w-[55px] sm:h-[55px] flex items-center justify-center text-2xl sm:text-3xl bg-[#c1d6bb] text-slate-900 hover:text-red-500 transition-all duration-300 rounded-lg font-semibold z-50 absolute top-5 right-5"
         >
           <CgLogOff />
         </button>
         {isOpenPromtArea && sampleImage && (
           <button
             onClick={HandelBackButton}
-            className="cursor-pointer w-[55px] h-[55px] flex items-center justify-center text-2xl sm:text-3xl bg-[#c1d6bb] text-slate-900 hover:text-red-500 transition-all duration-300 rounded-lg font-semibold z-50 absolute top-5 left-5"
+            className="cursor-pointer w-[40px] h-[40px] sm:w-[55px] sm:h-[55px] flex items-center justify-center text-2xl sm:text-3xl bg-[#c1d6bb] text-slate-900 hover:text-red-500 transition-all duration-300 rounded-lg font-semibold z-50 absolute top-5 left-5"
           >
             <MdOutlineArrowBack />
           </button>
@@ -155,19 +155,23 @@ const User = () => {
           className="w-30 z-50 absolute top-5 right-5 md:w-35"
           style={{ background: "transparent" }}
         /> */}
-        <img src={Images.mainLogo} alt="Logo" className="w-[200px]" />
+        <img
+          src={Images.mainLogo}
+          alt="Logo"
+          className="sm:w-[200px] w-[120px]"
+        />
         {!isOpenPromtArea && !showSample && (
-          <span className="text-[2rem] font-bold text-center text-slate-900">
+          <span className="sm:text-[2rem] text-[1.3rem] font-bold text-center text-slate-900">
             Hi Kamal
           </span>
         )}
         {isOpenPromtArea && !isLoad && !showSample && (
           <div className="w-full flex flex-col gap-4">
             <div className="flex items-center justify-between">
-              <span className="text-lg font-semibold text-slate-900">
+              <span className="text-[15px] sm:text-lg font-semibold text-slate-900">
                 Enter Prompt
               </span>
-              <span className="text-sm text-red-500 font-medium">
+              <span className="text-[15px] sm:text-sm text-red-500 font-medium">
                 Attempts Left: {attemptsLeft}
               </span>
             </div>
@@ -195,7 +199,7 @@ const User = () => {
           {showSample && (
             <button
               onClick={HandelShareButtonClick}
-              className={`bg-[#6cd454] w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black hover:bg-[#aae49d] duration-300 transition-all ${
+              className={`bg-[#6cd454] w-full sm:w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black hover:bg-[#aae49d] duration-300 transition-all ${
                 isOpenShareIcons ? "hidden" : ""
               }`}
             >
@@ -204,7 +208,7 @@ const User = () => {
           )}
           <button
             onClick={HandelGenerateButton}
-            className={`bg-[#6cd454] w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black hover:bg-[#aae49d] duration-300 transition-all ${
+            className={`bg-[#6cd454] w-full sm:w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black hover:bg-[#aae49d] duration-300 transition-all ${
               showSample ? "hidden" : ""
             }`}
           >
@@ -214,7 +218,7 @@ const User = () => {
             <button
               disabled={isLoad}
               onClick={HandelViewPreviousImages}
-              className="bg-[#6cd454] w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black hover:bg-[#aae49d] duration-300 transition-all"
+              className="bg-[#6cd454] w-full sm:w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black hover:bg-[#aae49d] duration-300 transition-all"
             >
               View Previous Generations
             </button>
