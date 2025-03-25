@@ -26,17 +26,21 @@ const Register = () => {
     Navigate("/user");
   };
   return (
-    <div className="w-full flex items-center justify-center h-full min-h-[100vh] px-12">
+    <div className="w-full flex items-center justify-center h-full min-h-[100vh] px-6 sm:px-12">
       <div className=" w-full relative sm:w-[550px] flex flex-col items-center gap-10 md:w-[700px] bg-slate-100 px-8 py-8 lg:w-[800px] rounded-lg shadows-lg justify-center shadow-2xl min-h-[70vh]">
         <Lottie
           animationData={sunAnimation}
           loop={true}
-          className="w-30 z-50 absolute top-5 right-5 md:w-35"
+          className="sm:w-30 w-[60px] z-50 absolute top-5 right-5 md:w-35"
           style={{ background: "transparent" }}
         />
-        <img src={Images.mainLogo} alt="Logo" className="w-[200px]" />
+        <img
+          src={Images.mainLogo}
+          alt="Logo"
+          className="sm:w-[200px] w-[120px]"
+        />
         <div className="flex flex-col w-full items-center gap-6">
-          <div className="flex flex-col w-2/3">
+          <div className="flex flex-col w-full sm:w-2/3">
             <label className="text-sm md:text-lg font-bold text-gray-700 mb-2">
               Name <span className="text-red-500 text-lg">*</span>
             </label>
@@ -46,7 +50,7 @@ const Register = () => {
             />
           </div>
 
-          <div className="flex flex-col w-2/3">
+          <div className="flex flex-col w-full sm:w-2/3">
             <label className="text-sm md:text-lg font-bold text-gray-700 mb-2">
               Code <span className="text-red-500 text-lg">*</span>
             </label>
