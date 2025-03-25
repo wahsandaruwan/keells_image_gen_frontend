@@ -78,13 +78,13 @@ const Home = () => {
         <Lottie
           animationData={sunAnimation}
           loop={true}
-          className="sm:w-30 w-[60px] z-50 absolute top-5 right-5 md:w-35"
+          className="sm:w-28 w-[60px] z-50 absolute top-5 right-5 md:w-32"
           style={{ background: "transparent" }}
         />
         <img
           src={Images.mainLogo}
           alt="Logo"
-          className="sm:w-[200px] w-[120px]"
+          className="sm:w-[170px] w-[120px]"
         />
         {!isOTPOpen && !showOTP && (
           <div className="font-bold text-[15px] sm:text-[1.6rem]">
