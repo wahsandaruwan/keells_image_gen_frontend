@@ -73,17 +73,21 @@ const Home = () => {
     Navigate("/register");
   };
   return (
-    <div className="w-full flex items-center justify-center h-full min-h-[100vh] px-12">
+    <div className="w-full flex items-center justify-center h-full min-h-[100vh] px-6 sm:px-12">
       <div className=" w-full relative sm:w-[550px] flex flex-col items-center gap-10 md:w-[700px] bg-slate-100 px-8 py-8 lg:w-[800px] rounded-lg shadows-lg justify-center shadow-2xl min-h-[70vh]">
         <Lottie
           animationData={sunAnimation}
           loop={true}
-          className="w-30 z-50 absolute top-5 right-5 md:w-35"
+          className="sm:w-30 w-[60px] z-50 absolute top-5 right-5 md:w-35"
           style={{ background: "transparent" }}
         />
-        <img src={Images.mainLogo} alt="Logo" className="w-[200px]" />
+        <img
+          src={Images.mainLogo}
+          alt="Logo"
+          className="sm:w-[200px] w-[120px]"
+        />
         {!isOTPOpen && !showOTP && (
-          <div className="font-bold">
+          <div className="font-bold text-[15px] sm:text-[1.6rem]">
             <TypeAnimation
               sequence={[
                 "සුභ අලුත් අවුරුද්දක් වේවා!",
@@ -93,27 +97,28 @@ const Home = () => {
                 "Happy New Year!",
                 500,
               ]}
-              style={{ fontSize: "1.65em" }}
               repeat={Infinity}
             />
           </div>
         )}
         {isOTPOpen && !showOTP && (
           <div className="text-center flex flex-col items-center ">
-            <span className="text-[16px] font-bold text-center">
+            <span className="text-[15px] sm:text-[16px] font-bold text-center">
               Please Enter Mobile Number To Get OTP
             </span>
             <input
               placeholder="Enter Mobile Number"
               onChange={(e) => setMobile(e.target.value)}
-              className="bg-white px-4 py-3 mt-5 rounded-lg border-2 border-gray-300 focus:border-[#6cd454] focus:ring-2 focus:ring-[#6cd454] focus:outline-none transition duration-200"
+              className="bg-white px-4 py-3 mt-5 text-[15px] sm:text-[16px] rounded-lg border-2 border-gray-300 focus:border-[#6cd454] focus:ring-2 focus:ring-[#6cd454] focus:outline-none transition duration-200"
             />
             <Recaptcha onVerify={setRecaptchaVerified} />
           </div>
         )}
         {showOTP && (
           <div className="text-center flex flex-col items-center w-full ">
-            <span className="text-[16px] font-bold text-center">Enter OTP</span>
+            <span className="text-[15px] sm:text-[16px] font-bold text-center">
+              Enter OTP
+            </span>
             <div className="flex items-center mt-5 justify-center gap-4">
               {OTP.map((digit, index) => (
                 <input
