@@ -3,10 +3,12 @@ import { Images, Animations } from "../../constants";
 import Lottie from "lottie-react";
 import { useNavigate } from "react-router";
 import { Recaptcha } from "../../components/atoms";
+import { UserNameValidation } from "../../validations";
 
 const Register = () => {
   const [sunAnimation, setSunAnimation] = useState(null);
   const [recaptchaVerified, setRecaptchaVerified] = useState(false);
+  const [UserName, setUserName] = useState("");
   const Navigate = useNavigate();
 
   useEffect(() => {
@@ -19,8 +21,17 @@ const Register = () => {
   }, []);
 
   const HandelRegisterButton = () => {
+    const userNameValidation = UserNameValidation(UserName);
+    if (!UserName) {
+      alert("Please enter your user name .");
+      return;
+    }
     if (!recaptchaVerified) {
-      alert("Please verify the reCAPTCHA first.");
+      alert("Please verify the reCAPTCHA.");
+      return;
+    }
+    if (!userNameValidation) {
+      alert("Please enter valid user name .");
       return;
     }
     Navigate("/user");
@@ -42,10 +53,11 @@ const Register = () => {
         <div className="flex flex-col w-full items-center gap-6">
           <div className="flex flex-col w-full sm:w-2/3">
             <label className="text-sm md:text-lg font-bold text-gray-700 mb-2">
-              Name <span className="text-red-500 text-lg">*</span>
+              User Name <span className="text-red-500 text-lg">*</span>
             </label>
             <input
-              placeholder="Enter Your Name"
+              onChange={(e) => setUserName(e.target.value)}
+              placeholder="Enter Your User Name"
               className="bg-white px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-[#6cd454] focus:ring-2 focus:ring-[#6cd454] focus:outline-none transition duration-200"
             />
           </div>

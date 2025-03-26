@@ -1,4 +1,4 @@
 export const MobileNumberValidation = (mobileNumber) => {
-  const mobileNumberPattern = /^[0-9]{10}$/;
-  return mobileNumberPattern.test(mobileNumber);
+  const cleanedNumber = mobileNumber.replace(/[^0123456789]/g, "");
+  return cleanedNumber.length === 10;
 };
