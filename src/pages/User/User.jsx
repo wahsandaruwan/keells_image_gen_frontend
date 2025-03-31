@@ -13,16 +13,18 @@ import {
   FacebookIcon,
   TwitterIcon,
 } from "react-share";
-import { Recaptcha } from "../../components/atoms";
+import { Recaptcha, FAQ } from "../../components/atoms";
 import { CgLogOff } from "react-icons/cg";
 import { MdOutlineArrowBack } from "react-icons/md";
 import { PromptValidation } from "../../validations";
+import { FaQuestionCircle } from "react-icons/fa";
 
 const User = () => {
   //const [sunAnimation, setSunAnimation] = useState(null);
   const [isLoad, setIsLoad] = useState(false);
   const [isOpenPromtArea, setIsOpenPromtArea] = useState(false);
   const [viewPreviousImages, setViewPreviousImages] = useState(false);
+  const [isFAQOpen, setIsFAQOpen] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [attemptsLeft, setAttemptsLeft] = useState(3);
   const [showSample, setShowSample] = useState(false);
@@ -121,6 +123,7 @@ const User = () => {
     setPrompt("");
     setAttemptsLeft(3);
     setRecaptchaVerified(false);
+    setIsFAQOpen(false);
   };
 
   const HandelShareButtonClick = () => {
@@ -147,14 +150,24 @@ const User = () => {
         >
           <CgLogOff />
         </button>
-        {isOpenPromtArea && sampleImage && (
-          <button
-            onClick={HandelBackButton}
-            className="cursor-pointer w-[40px] h-[40px] sm:w-[45px] sm:h-[45px] flex items-center justify-center text-2xl sm:text-3xl bg-[#c1d6bb] text-slate-900 hover:text-red-500 transition-all duration-300 rounded-lg font-semibold z-50 absolute top-5 left-5"
-          >
-            <MdOutlineArrowBack />
-          </button>
-        )}
+        <div className="absolute top-5 left-5 flex items-center  gap-5">
+          {isOpenPromtArea && sampleImage && (
+            <button
+              onClick={HandelBackButton}
+              className="cursor-pointer w-[40px] h-[40px] sm:w-[45px] sm:h-[45px] flex items-center justify-center text-2xl sm:text-3xl bg-[#c1d6bb] text-slate-900 hover:text-red-500 transition-all duration-300 rounded-lg font-semibold z-50"
+            >
+              <MdOutlineArrowBack />
+            </button>
+          )}
+          {!isFAQOpen && (
+            <button
+              onClick={() => setIsFAQOpen(true)}
+              className="cursor-pointer w-[40px] h-[40px] sm:w-[45px] sm:h-[45px] flex items-center justify-center text-2xl sm:text-3xl bg-[#c1d6bb] text-slate-900 hover:text-red-500 transition-all duration-300 rounded-lg font-semibold z-50 "
+            >
+              <FaQuestionCircle />
+            </button>
+          )}
+        </div>
 
         {/* <Lottie
           animationData={sunAnimation}
@@ -167,12 +180,16 @@ const User = () => {
           alt="Logo"
           className="sm:w-[200px] w-[120px]"
         />
-        {!isOpenPromtArea && !showSample && (
+
+        {/* Start Section */}
+        {!isOpenPromtArea && !showSample && !isFAQOpen && (
           <span className="sm:text-[2rem] text-[1.3rem] font-bold text-center text-slate-900">
             Hi Kamal
           </span>
         )}
-        {isOpenPromtArea && !isLoad && !showSample && (
+
+        {/* Prompt Section */}
+        {isOpenPromtArea && !isLoad && !showSample && !isFAQOpen && (
           <div className="w-full flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <span className="text-[15px] sm:text-lg font-semibold text-slate-900">
@@ -193,8 +210,10 @@ const User = () => {
             </div>
           </div>
         )}
-        {isLoad && <Loader />}
-        {showSample && (
+
+        {/* Loader */}
+        {isLoad && !isFAQOpen && <Loader />}
+        {showSample && !isFAQOpen && (
           <img
             src={sampleImage || Images.sample3}
             alt="Sample "
@@ -202,8 +221,20 @@ const User = () => {
           />
         )}
 
+        {/* FAQ Section */}
+        {isFAQOpen && <FAQ />}
+        {isFAQOpen && (
+          <button
+            onClick={() => setIsFAQOpen(false)}
+            className={`bg-[#6cd454] w-9/12 sm:mt-0 sm:w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black duration-300 hover:bg-[#aae49d] transition-all`}
+          >
+            Close
+          </button>
+        )}
+
+        {/* Sample Image Section */}
         <div className="w-full flex  flex-col items-center gap-5">
-          {showSample && (
+          {showSample && !isFAQOpen && (
             <button
               onClick={HandelShareButtonClick}
               className={`bg-[#6cd454] w-full sm:w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black hover:bg-[#aae49d] duration-300 transition-all ${
@@ -213,15 +244,17 @@ const User = () => {
               Share
             </button>
           )}
-          <button
-            onClick={HandelGenerateButton}
-            className={`bg-[#6cd454] w-full sm:w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black hover:bg-[#aae49d] duration-300 transition-all ${
-              showSample ? "hidden" : ""
-            }`}
-          >
-            {!isOpenPromtArea && !showSample ? "Generate" : "Send"}
-          </button>
-          {isOpenPromtArea && (
+          {!isFAQOpen && (
+            <button
+              onClick={HandelGenerateButton}
+              className={`bg-[#6cd454] w-full sm:w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black hover:bg-[#aae49d] duration-300 transition-all ${
+                showSample ? "hidden" : ""
+              }`}
+            >
+              {!isOpenPromtArea && !showSample ? "Generate" : "Send"}
+            </button>
+          )}
+          {isOpenPromtArea && !isFAQOpen && (
             <button
               disabled={isLoad}
               onClick={HandelViewPreviousImages}
@@ -231,7 +264,7 @@ const User = () => {
             </button>
           )}
         </div>
-        {viewPreviousImages && (
+        {viewPreviousImages && !isFAQOpen && (
           <div className="fixed inset-0 flex items-center bg-black/50 justify-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-lg relative">
               <button
@@ -254,7 +287,7 @@ const User = () => {
             </div>
           </div>
         )}
-        {isOpenShareIcons && showSample && (
+        {isOpenShareIcons && showSample && !isFAQOpen && (
           <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-7/12 max-w-lg relative">
               <button
