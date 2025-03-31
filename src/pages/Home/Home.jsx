@@ -80,13 +80,14 @@ const Home = () => {
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
+        overflow: "hidden",
       }}
     >
       <div
-        className={`w-full h-auto relative sm:w-[550px] flex flex-col items-center justify-center gap-10 md:w-[700px] lg:w-[800px] shadow-2xl ${
+        className={`w-full h-auto relative sm:w-[550px] flex flex-col items-center justify-center gap-10 md:w-[700px] lg:w-[800px]  ${
           !isOTPOpen && !showOTP
             ? "bg-transparent min-h-[100vh] sm:min-h-[70vh]"
-            : "bg-slate-100 rounded-lg shadows-lg min-h-[70vh] px-8 py-8"
+            : "bg-slate-100 rounded-lg shadows-lg min-h-[70vh] px-8 py-8 shadow-2xl"
         }`}
       >
         {!isOTPOpen && !showOTP && (
@@ -94,6 +95,9 @@ const Home = () => {
             src={Images.backGround}
             alt="Keells Awrudu"
             className="min-w-[320px] w-[390px] h-auto overflow-hidden"
+            style={{
+              overflow: "hidden",
+            }}
           />
         )}
         {
