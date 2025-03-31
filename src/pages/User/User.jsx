@@ -31,10 +31,17 @@ const User = () => {
   const [prevImages, setPrevImages] = useState([
     Images.sample1,
     Images.sample2,
+    Images.sample3,
+    Images.sample4,
+    Images.sample5,
+    Images.sample6,
+    Images.sample7,
+    Images.sample8,
   ]);
   const [sampleImage, setSampleImage] = useState(
     "https://picsum.photos/200/300"
   );
+  const [finalImage, setFinalImage] = useState("");
   const [isOpenShareIcons, setIsOpenShareIcons] = useState(false);
   const [recaptchaVerified, setRecaptchaVerified] = useState(false);
   const Navigate = useNavigate();
@@ -128,7 +135,51 @@ const User = () => {
   };
 
   const HandelShareButtonClick = () => {
+    mergeImageWithFrame();
     setIsOpenShareIcons(true);
+  };
+
+  // Function to merge images
+  const mergeImageWithFrame = () => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+
+    const generatedImg = new Image();
+    generatedImg.crossOrigin = "anonymous";
+    generatedImg.src = sampleImage;
+
+    const frameImg = new Image();
+    frameImg.crossOrigin = "anonymous";
+    frameImg.src = Images.frame;
+
+    generatedImg.onload = () => {
+      frameImg.onload = () => {
+        canvas.width = generatedImg.width;
+        canvas.height = generatedImg.height;
+
+        ctx.drawImage(generatedImg, 0, 0, canvas.width, canvas.height);
+        ctx.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
+
+        // Convert canvas to Blob
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const blobUrl = URL.createObjectURL(blob);
+            setFinalImage(blobUrl); // Use Blob URL instead of Base64
+          }
+        }, "image/png");
+      };
+    };
+
+    downloadImage();
+  };
+
+  const downloadImage = () => {
+    const link = document.createElement("a");
+    link.href = finalImage;
+    link.download = "merged-image.png";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -145,8 +196,6 @@ const User = () => {
       }}
     >
       <div className=" w-full relative sm:w-[550px] flex flex-col items-center gap-10 md:w-[700px] bg-slate-100 px-8 py-8 lg:w-[800px] rounded-lg shadows-lg justify-center shadow-2xl min-h-[70vh]">
-        <canvas ref={canvasRef} className="hidden" />
-
         <button
           onClick={HandelLogOutButon}
           className="cursor-pointer w-[40px] h-[40px] sm:w-[45px] sm:h-[45px] flex items-center justify-center text-2xl sm:text-3xl bg-[#c1d6bb] text-slate-900 hover:text-red-500 transition-all duration-300 rounded-lg font-semibold z-50 absolute top-5 right-5"
@@ -285,7 +334,7 @@ const User = () => {
               >
                 ❌
               </button>
-              <div className="w-full flex flex-wrap gap-4 mt-6 justify-center">
+              <div className="w-full max-h-[300px] overflow-y-auto flex flex-wrap gap-4 mt-6 justify-center">
                 {prevImages.map((img, index) => (
                   <img
                     key={index}
@@ -311,7 +360,7 @@ const User = () => {
               <div className="w-full flex flex-wrap gap-5 mt-6 justify-center">
                 {/* Share buttons */}
                 <EmailShareButton
-                  url={sampleImage}
+                  url={finalImage}
                   subject="Check this image"
                   body="Hey, check this out!"
                   className="hover:scale-110 duration-300 transition-all"
@@ -320,14 +369,15 @@ const User = () => {
                 </EmailShareButton>
 
                 <FacebookShareButton
-                  url={sampleImage}
+                  url={finalImage}
+                  hashtag="#GeneratedImage"
                   className="hover:scale-110 duration-300 transition-all"
                 >
                   <FacebookIcon size={50} round />
                 </FacebookShareButton>
 
                 <WhatsappShareButton
-                  url={sampleImage}
+                  url={finalImage}
                   title="Check out this image"
                   className="hover:scale-110 duration-300 transition-all"
                 >
@@ -335,7 +385,7 @@ const User = () => {
                 </WhatsappShareButton>
 
                 <TwitterShareButton
-                  url={sampleImage}
+                  url={finalImage}
                   title="Check out this image"
                   className="hover:scale-110 duration-300 transition-all"
                 >
@@ -346,6 +396,7 @@ const User = () => {
           </div>
         )}
       </div>
+      <canvas ref={canvasRef} className="hidden" />
     </div>
   );
 };
