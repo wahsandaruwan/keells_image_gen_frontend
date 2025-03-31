@@ -103,14 +103,43 @@ const Home = () => {
 
         {/* Home section */}
         {!isOTPOpen && !showOTP && !isFAQOpen && (
-          <img
-            src={Images.backGround}
-            alt="Keells Awrudu"
-            className="min-w-[320px] w-[390px] h-auto overflow-hidden"
+          <div
             style={{
+              position: "relative",
+              width: "400px",
+              height: "600px",
               overflow: "hidden",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
-          />
+          >
+            <img
+              src={Images.backGround}
+              alt="Keells Awrudu"
+              style={{
+                maxWidth: "100%",
+                maxHeight: "100%",
+                position: "absolute",
+                objectFit: "cover",
+                top: 0,
+                left: 0,
+              }}
+            />
+            <button
+              style={{
+                position: "relative",
+                zIndex: 999,
+                marginTop: "250px",
+              }}
+              onClick={HandleButtonClick}
+              className={`bg-[#6cd454] w-6/12 sm:mt-0 sm:w-6/12 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black duration-300 hover:bg-[#aae49d] transition-all ${
+                showOTP || isFAQOpen ? "hidden" : ""
+              }`}
+            >
+              {!isOTPOpen && !showOTP ? "Generate" : null}
+            </button>
+          </div>
         )}
         {
           <Lottie
@@ -173,23 +202,21 @@ const Home = () => {
         {isFAQOpen && (
           <button
             onClick={() => setIsFAQOpen(false)}
-            className={`bg-[#6cd454] w-9/12 sm:mt-0 sm:w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black duration-300 hover:bg-[#aae49d] transition-all`}
+            className={`bg-[#6cd454] w-6/12 sm:mt-0 sm:w-6/12 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black duration-300 hover:bg-[#aae49d] transition-all`}
           >
             Close
           </button>
         )}
-        <button
-          onClick={HandleButtonClick}
-          className={`bg-[#6cd454] w-9/12 sm:mt-0 sm:w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black duration-300 hover:bg-[#aae49d] transition-all ${
-            showOTP || isFAQOpen ? "hidden" : ""
-          }`}
-        >
-          {isOTPOpen && !showOTP
-            ? "Send"
-            : !isOTPOpen && !showOTP
-            ? "Generate"
-            : ""}
-        </button>
+        {isOTPOpen && !showOTP ? (
+          <button
+            onClick={HandleButtonClick}
+            className={`bg-[#6cd454] w-6/12 sm:mt-0 sm:w-6/12 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black duration-300 hover:bg-[#aae49d] transition-all ${
+              showOTP || isFAQOpen ? "hidden" : ""
+            }`}
+          >
+            Send
+          </button>
+        ) : null}
       </div>
     </div>
   );
