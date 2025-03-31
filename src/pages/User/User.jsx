@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Images, Animations } from "../../constants";
 //import Lottie from "lottie-react";
 import { useNavigate } from "react-router";
@@ -13,29 +13,39 @@ import {
   FacebookIcon,
   TwitterIcon,
 } from "react-share";
-import { Recaptcha } from "../../components/atoms";
+import { Recaptcha, FAQ } from "../../components/atoms";
 import { CgLogOff } from "react-icons/cg";
 import { MdOutlineArrowBack } from "react-icons/md";
 import { PromptValidation } from "../../validations";
+import { FaQuestionCircle } from "react-icons/fa";
 
 const User = () => {
   //const [sunAnimation, setSunAnimation] = useState(null);
   const [isLoad, setIsLoad] = useState(false);
   const [isOpenPromtArea, setIsOpenPromtArea] = useState(false);
   const [viewPreviousImages, setViewPreviousImages] = useState(false);
+  const [isFAQOpen, setIsFAQOpen] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [attemptsLeft, setAttemptsLeft] = useState(3);
   const [showSample, setShowSample] = useState(false);
   const [prevImages, setPrevImages] = useState([
     Images.sample1,
     Images.sample2,
+    Images.sample3,
+    Images.sample4,
+    Images.sample5,
+    Images.sample6,
+    Images.sample7,
+    Images.sample8,
   ]);
   const [sampleImage, setSampleImage] = useState(
     "https://picsum.photos/200/300"
   );
+  const [finalImage, setFinalImage] = useState("");
   const [isOpenShareIcons, setIsOpenShareIcons] = useState(false);
   const [recaptchaVerified, setRecaptchaVerified] = useState(false);
   const Navigate = useNavigate();
+  const canvasRef = useRef(null);
 
   // useEffect(() => {
   //   // Fetch both animation files
@@ -121,10 +131,44 @@ const User = () => {
     setPrompt("");
     setAttemptsLeft(3);
     setRecaptchaVerified(false);
+    setIsFAQOpen(false);
   };
 
   const HandelShareButtonClick = () => {
+    mergeImageWithFrame();
     setIsOpenShareIcons(true);
+  };
+
+  // Function to merge images
+  const mergeImageWithFrame = () => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+
+    const generatedImg = new Image();
+    generatedImg.crossOrigin = "anonymous";
+    generatedImg.src = sampleImage;
+
+    const frameImg = new Image();
+    frameImg.crossOrigin = "anonymous";
+    frameImg.src = Images.frame;
+
+    generatedImg.onload = () => {
+      frameImg.onload = () => {
+        canvas.width = generatedImg.width;
+        canvas.height = generatedImg.height;
+
+        ctx.drawImage(generatedImg, 0, 0, canvas.width, canvas.height);
+        ctx.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
+
+        // Convert canvas to Blob
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const blobUrl = URL.createObjectURL(blob);
+            setFinalImage(blobUrl); // Use Blob URL instead of Base64
+          }
+        }, "image/png");
+      };
+    };
   };
 
   return (
@@ -147,14 +191,24 @@ const User = () => {
         >
           <CgLogOff />
         </button>
-        {isOpenPromtArea && sampleImage && (
-          <button
-            onClick={HandelBackButton}
-            className="cursor-pointer w-[40px] h-[40px] sm:w-[45px] sm:h-[45px] flex items-center justify-center text-2xl sm:text-3xl bg-[#c1d6bb] text-slate-900 hover:text-red-500 transition-all duration-300 rounded-lg font-semibold z-50 absolute top-5 left-5"
-          >
-            <MdOutlineArrowBack />
-          </button>
-        )}
+        <div className="absolute top-5 left-5 flex items-center  gap-5">
+          {isOpenPromtArea && sampleImage && (
+            <button
+              onClick={HandelBackButton}
+              className="cursor-pointer w-[40px] h-[40px] sm:w-[45px] sm:h-[45px] flex items-center justify-center text-2xl sm:text-3xl bg-[#c1d6bb] text-slate-900 hover:text-red-500 transition-all duration-300 rounded-lg font-semibold z-50"
+            >
+              <MdOutlineArrowBack />
+            </button>
+          )}
+          {!isFAQOpen && !isOpenPromtArea && (
+            <button
+              onClick={() => setIsFAQOpen(true)}
+              className="cursor-pointer w-[40px] h-[40px] sm:w-[45px] sm:h-[45px] flex items-center justify-center text-2xl sm:text-3xl bg-[#c1d6bb] text-slate-900 hover:text-red-500 transition-all duration-300 rounded-lg font-semibold z-50 "
+            >
+              <FaQuestionCircle />
+            </button>
+          )}
+        </div>
 
         {/* <Lottie
           animationData={sunAnimation}
@@ -167,12 +221,16 @@ const User = () => {
           alt="Logo"
           className="sm:w-[200px] w-[120px]"
         />
-        {!isOpenPromtArea && !showSample && (
+
+        {/* Start Section */}
+        {!isOpenPromtArea && !showSample && !isFAQOpen && (
           <span className="sm:text-[2rem] text-[1.3rem] font-bold text-center text-slate-900">
             Hi Kamal
           </span>
         )}
-        {isOpenPromtArea && !isLoad && !showSample && (
+
+        {/* Prompt Section */}
+        {isOpenPromtArea && !isLoad && !showSample && !isFAQOpen && (
           <div className="w-full flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <span className="text-[15px] sm:text-lg font-semibold text-slate-900">
@@ -193,17 +251,40 @@ const User = () => {
             </div>
           </div>
         )}
-        {isLoad && <Loader />}
-        {showSample && (
-          <img
-            src={sampleImage || Images.sample3}
-            alt="Sample "
-            className="w-full max-w-[300px] max-h-[300px] rounded-lg shadow-lg"
-          />
+
+        {/* Loader */}
+        {isLoad && !isFAQOpen && <Loader />}
+
+        {/* Generate Image Section */}
+        {showSample && !isFAQOpen && (
+          <div className="relative max-w-[300px] max-h-[300px]">
+            <img
+              src={sampleImage}
+              alt="Generated"
+              className="w-full h-full object-cover rounded-lg shadow-lg"
+            />
+            <img
+              src={Images.frame}
+              alt="Frame"
+              className="absolute top-0 left-0 w-full h-full rounded-b-lg pointer-events-none"
+            />
+          </div>
         )}
 
+        {/* FAQ Section */}
+        {isFAQOpen && <FAQ />}
+        {isFAQOpen && (
+          <button
+            onClick={() => setIsFAQOpen(false)}
+            className={`bg-[#6cd454] w-9/12 sm:mt-0 sm:w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black duration-300 hover:bg-[#aae49d] transition-all`}
+          >
+            Close
+          </button>
+        )}
+
+        {/* Sample Image Section */}
         <div className="w-full flex  flex-col items-center gap-5">
-          {showSample && (
+          {showSample && !isFAQOpen && (
             <button
               onClick={HandelShareButtonClick}
               className={`bg-[#6cd454] w-full sm:w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black hover:bg-[#aae49d] duration-300 transition-all ${
@@ -213,15 +294,17 @@ const User = () => {
               Share
             </button>
           )}
-          <button
-            onClick={HandelGenerateButton}
-            className={`bg-[#6cd454] w-full sm:w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black hover:bg-[#aae49d] duration-300 transition-all ${
-              showSample ? "hidden" : ""
-            }`}
-          >
-            {!isOpenPromtArea && !showSample ? "Generate" : "Send"}
-          </button>
-          {isOpenPromtArea && (
+          {!isFAQOpen && (
+            <button
+              onClick={HandelGenerateButton}
+              className={`bg-[#6cd454] w-full sm:w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black hover:bg-[#aae49d] duration-300 transition-all ${
+                showSample ? "hidden" : ""
+              }`}
+            >
+              {!isOpenPromtArea && !showSample ? "Generate" : "Send"}
+            </button>
+          )}
+          {isOpenPromtArea && !isFAQOpen && (
             <button
               disabled={isLoad}
               onClick={HandelViewPreviousImages}
@@ -231,7 +314,7 @@ const User = () => {
             </button>
           )}
         </div>
-        {viewPreviousImages && (
+        {viewPreviousImages && !isFAQOpen && (
           <div className="fixed inset-0 flex items-center bg-black/50 justify-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-lg relative">
               <button
@@ -240,7 +323,7 @@ const User = () => {
               >
                 ❌
               </button>
-              <div className="w-full flex flex-wrap gap-4 mt-6 justify-center">
+              <div className="w-full max-h-[300px] overflow-y-auto flex flex-wrap gap-4 mt-6 justify-center">
                 {prevImages.map((img, index) => (
                   <img
                     key={index}
@@ -254,7 +337,7 @@ const User = () => {
             </div>
           </div>
         )}
-        {isOpenShareIcons && showSample && (
+        {isOpenShareIcons && showSample && !isFAQOpen && (
           <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-7/12 max-w-lg relative">
               <button
@@ -266,7 +349,7 @@ const User = () => {
               <div className="w-full flex flex-wrap gap-5 mt-6 justify-center">
                 {/* Share buttons */}
                 <EmailShareButton
-                  url={sampleImage}
+                  url={finalImage}
                   subject="Check this image"
                   body="Hey, check this out!"
                   className="hover:scale-110 duration-300 transition-all"
@@ -275,14 +358,15 @@ const User = () => {
                 </EmailShareButton>
 
                 <FacebookShareButton
-                  url={sampleImage}
+                  url={finalImage}
+                  hashtag="#GeneratedImage"
                   className="hover:scale-110 duration-300 transition-all"
                 >
                   <FacebookIcon size={50} round />
                 </FacebookShareButton>
 
                 <WhatsappShareButton
-                  url={sampleImage}
+                  url={finalImage}
                   title="Check out this image"
                   className="hover:scale-110 duration-300 transition-all"
                 >
@@ -290,7 +374,7 @@ const User = () => {
                 </WhatsappShareButton>
 
                 <TwitterShareButton
-                  url={sampleImage}
+                  url={finalImage}
                   title="Check out this image"
                   className="hover:scale-110 duration-300 transition-all"
                 >
@@ -301,6 +385,7 @@ const User = () => {
           </div>
         )}
       </div>
+      <canvas ref={canvasRef} className="hidden" />
     </div>
   );
 };
