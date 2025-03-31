@@ -110,21 +110,6 @@ const Home = () => {
             style={{ background: "transparent" }}
           />
         }
-        {/* {!isOTPOpen && !showOTP && (
-          <div className="font-bold text-[15px] sm:text-[1.6rem] sm:mt-8 ">
-            <TypeAnimation
-              sequence={[
-                "සුභ අලුත් අවුරුද්දක් වේවා!",
-                500,
-                "புத்தாண்டு நல்வாழ்த்துக்கள்!",
-                500,
-                "Happy New Year!",
-                500,
-              ]}
-              repeat={Infinity}
-            />
-          </div>
-        )} */}
         {isOTPOpen && !showOTP && (
           <div className="text-center flex flex-col items-center ">
             <span className="text-[15px] sm:text-[16px] font-bold text-center">
@@ -133,6 +118,7 @@ const Home = () => {
             <input
               placeholder="Enter Mobile Number"
               onChange={(e) => setMobile(e.target.value)}
+              maxLength="10"
               className="bg-white px-4 py-3 mt-5 text-[15px] sm:text-[16px] rounded-lg border-2 border-gray-300 focus:border-[#6cd454] focus:ring-2 focus:ring-[#6cd454] focus:outline-none transition duration-200"
             />
             <Recaptcha onVerify={setRecaptchaVerified} />
@@ -168,7 +154,7 @@ const Home = () => {
           onClick={HandleButtonClick}
           className={`bg-[#6cd454] w-9/12 sm:mt-0 sm:w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black duration-300 hover:bg-[#aae49d] transition-all ${
             showOTP ? "hidden" : ""
-          } ${!isOTPOpen && !showOTP ? "mb-10" : "mb-0"}`}
+          }`}
         >
           {isOTPOpen && !showOTP
             ? "Send"
