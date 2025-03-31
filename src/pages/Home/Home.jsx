@@ -106,8 +106,8 @@ const Home = () => {
           <div
             style={{
               position: "relative",
-              width: "500px",
-              height: "800px",
+              width: "400px",
+              height: "600px",
               overflow: "hidden",
               display: "flex",
               justifyContent: "center",
@@ -118,6 +118,8 @@ const Home = () => {
               src={Images.backGround}
               alt="Keells Awrudu"
               style={{
+                maxWidth: "100%",
+                maxHeight: "100%",
                 position: "absolute",
                 objectFit: "cover",
                 top: 0,
