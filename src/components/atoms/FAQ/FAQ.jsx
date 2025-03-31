@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 import { FAQData } from "../../../data";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { useLocation } from "react-router";
 
 const FAQ = () => {
   const [expandedQuestion, setExpandedQuestion] = useState(null);
+  const location = useLocation();
   return (
-    <div className="w-full sm:w-2/3 max-h-[600px] mt-16">
+    <div
+      className={`w-full sm:w-2/3 max-h-[600px] ${
+        location.pathname === "/" ? "mt-16" : "mt-0"
+      }`}
+    >
       <h2 className="text-[15px] sm:text-[16px] font-bold text-center">
         Frequently Asked Questions
       </h2>
