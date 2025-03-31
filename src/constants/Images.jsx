@@ -1,6 +1,7 @@
 // -------------------- Imports --------------------
 const Images = {
   logo: "/Images/logo.png",
+  backGround: "/Images/backGround.png",
   mainLogo: "/Images/keellslogo.png",
   sample1: "/Images/sample1.jpg",
   sample2: "/Images/sample2.jpg",

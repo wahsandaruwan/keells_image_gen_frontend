@@ -73,21 +73,38 @@ const Home = () => {
     Navigate("/register");
   };
   return (
-    <div className="w-full flex items-center justify-center h-full min-h-[100vh] px-6 sm:px-12">
-      <div className=" w-full relative sm:w-[550px] flex flex-col items-center gap-10 md:w-[700px] bg-slate-100 px-8 py-8 lg:w-[800px] rounded-lg shadows-lg justify-center shadow-2xl min-h-[70vh]">
-        <Lottie
-          animationData={sunAnimation}
-          loop={true}
-          className="sm:w-28 w-[60px] z-50 absolute top-5 right-5 md:w-32"
-          style={{ background: "transparent" }}
-        />
-        <img
-          src={Images.mainLogo}
-          alt="Logo"
-          className="sm:w-[170px] w-[120px]"
-        />
-        {!isOTPOpen && !showOTP && (
-          <div className="font-bold text-[15px] sm:text-[1.6rem]">
+    <div
+      className={`w-full flex items-center justify-center h-full min-h-[100vh] ${
+        !isOTPOpen && !showOTP ? "px-0" : "sm:px-12"
+      }`}
+    >
+      <div
+        className={`w-full h-auto relative sm:w-[550px] flex flex-col items-center gap-10 md:w-[700px] lg:w-[800px] shadow-2xl ${
+          !isOTPOpen && !showOTP
+            ? "bg-transparent justify-end min-h-[100vh] sm:min-h-[70vh]"
+            : "bg-slate-100 justify-center rounded-lg shadows-lg min-h-[70vh] px-8 py-8"
+        }`}
+        style={{
+          backgroundImage: `url( ${
+            !isOTPOpen && !showOTP && Images.backGround
+          })`,
+          backgroundSize: "100% 100%",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        {
+          <Lottie
+            animationData={sunAnimation}
+            loop={true}
+            className={`sm:w-28 w-[60px] z-50 absolute top-5 right-5 md:w-32 ${
+              !isOTPOpen && !showOTP ? "hidden" : ""
+            }`}
+            style={{ background: "transparent" }}
+          />
+        }
+        {/* {!isOTPOpen && !showOTP && (
+          <div className="font-bold text-[15px] sm:text-[1.6rem] sm:mt-8 ">
             <TypeAnimation
               sequence={[
                 "සුභ අලුත් අවුරුද්දක් වේවා!",
@@ -100,7 +117,7 @@ const Home = () => {
               repeat={Infinity}
             />
           </div>
-        )}
+        )} */}
         {isOTPOpen && !showOTP && (
           <div className="text-center flex flex-col items-center ">
             <span className="text-[15px] sm:text-[16px] font-bold text-center">
@@ -142,9 +159,9 @@ const Home = () => {
         )}
         <button
           onClick={HandleButtonClick}
-          className={`bg-[#6cd454] w-full sm:w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black duration-300 hover:bg-[#aae49d] transition-all ${
+          className={`bg-[#6cd454] w-9/12 sm:mt-0 sm:w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black duration-300 hover:bg-[#aae49d] transition-all ${
             showOTP ? "hidden" : ""
-          }`}
+          } ${!isOTPOpen && !showOTP ? "mb-10" : "mb-0"}`}
         >
           {isOTPOpen && !showOTP
             ? "Send"
