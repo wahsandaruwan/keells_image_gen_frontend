@@ -2,16 +2,14 @@ import React, { useRef, useState, useEffect } from "react";
 import { Images, Animations } from "../../constants";
 import { useNavigate } from "react-router";
 import Lottie from "lottie-react";
-import { Recaptcha } from "../../components/atoms";
+import { Recaptcha, FAQ } from "../../components/atoms";
 import { MobileNumberValidation } from "../../validations";
-import { FaQuestionCircle, FaChevronDown, FaChevronUp } from "react-icons/fa";
-import { FAQData } from "../../data";
+import { FaQuestionCircle } from "react-icons/fa";
 
 const Home = () => {
   const [sunAnimation, setSunAnimation] = useState(null);
   const [isOTPOpen, setIsOTPOpen] = useState(false);
   const [isFAQOpen, setIsFAQOpen] = useState(false);
-  const [expandedQuestion, setExpandedQuestion] = useState(null);
   const [OTP, setOTP] = useState(["", "", "", ""]);
   const [showOTP, setShowOTP] = useState(false);
   const [recaptchaVerified, setRecaptchaVerified] = useState(false);
@@ -170,39 +168,7 @@ const Home = () => {
         )}
 
         {/* FAQ Section */}
-        {isFAQOpen && (
-          <div className="w-full sm:w-2/3 max-h-[600px] mt-16">
-            <h2 className="text-[15px] sm:text-[16px] font-bold text-center">
-              Frequently Asked Questions
-            </h2>
-            <div className="w-full space-y-3 overflow-y-auto mt-4 max-h-[200px]">
-              {FAQData.map((faq, index) => (
-                <div key={index} className="border-b pb-3">
-                  <button
-                    onClick={() =>
-                      setExpandedQuestion(
-                        expandedQuestion === index ? null : index
-                      )
-                    }
-                    className="w-full flex justify-between items-center py-2 text-left font-medium text-[13px] sm:text-[14px] focus:outline-none"
-                  >
-                    {faq.question}
-                    {expandedQuestion === index ? (
-                      <FaChevronUp className="text-gray-600" />
-                    ) : (
-                      <FaChevronDown className="text-gray-600" />
-                    )}
-                  </button>
-                  {expandedQuestion === index && (
-                    <p className="text-gray-700 mt-2 text-[13px] sm:text-[14px]">
-                      {faq.answer}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        {isFAQOpen && <FAQ />}
 
         {isFAQOpen && (
           <button
