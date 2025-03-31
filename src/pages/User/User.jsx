@@ -169,17 +169,6 @@ const User = () => {
         }, "image/png");
       };
     };
-
-    downloadImage();
-  };
-
-  const downloadImage = () => {
-    const link = document.createElement("a");
-    link.href = finalImage;
-    link.download = "merged-image.png";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   };
 
   return (
