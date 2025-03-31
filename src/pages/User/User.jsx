@@ -33,10 +33,6 @@ const User = () => {
     Images.sample2,
     Images.sample3,
     Images.sample4,
-    Images.sample5,
-    Images.sample6,
-    Images.sample7,
-    Images.sample8,
   ]);
   const [sampleImage, setSampleImage] = useState(
     "https://picsum.photos/200/300"
