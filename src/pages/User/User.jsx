@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Images, Animations } from "../../constants";
 //import Lottie from "lottie-react";
 import { useNavigate } from "react-router";
@@ -38,6 +38,7 @@ const User = () => {
   const [isOpenShareIcons, setIsOpenShareIcons] = useState(false);
   const [recaptchaVerified, setRecaptchaVerified] = useState(false);
   const Navigate = useNavigate();
+  const canvasRef = useRef(null);
 
   // useEffect(() => {
   //   // Fetch both animation files
@@ -144,6 +145,8 @@ const User = () => {
       }}
     >
       <div className=" w-full relative sm:w-[550px] flex flex-col items-center gap-10 md:w-[700px] bg-slate-100 px-8 py-8 lg:w-[800px] rounded-lg shadows-lg justify-center shadow-2xl min-h-[70vh]">
+        <canvas ref={canvasRef} className="hidden" />
+
         <button
           onClick={HandelLogOutButon}
           className="cursor-pointer w-[40px] h-[40px] sm:w-[45px] sm:h-[45px] flex items-center justify-center text-2xl sm:text-3xl bg-[#c1d6bb] text-slate-900 hover:text-red-500 transition-all duration-300 rounded-lg font-semibold z-50 absolute top-5 right-5"
@@ -159,7 +162,7 @@ const User = () => {
               <MdOutlineArrowBack />
             </button>
           )}
-          {!isFAQOpen && (
+          {!isFAQOpen && !isOpenPromtArea && (
             <button
               onClick={() => setIsFAQOpen(true)}
               className="cursor-pointer w-[40px] h-[40px] sm:w-[45px] sm:h-[45px] flex items-center justify-center text-2xl sm:text-3xl bg-[#c1d6bb] text-slate-900 hover:text-red-500 transition-all duration-300 rounded-lg font-semibold z-50 "
@@ -213,12 +216,21 @@ const User = () => {
 
         {/* Loader */}
         {isLoad && !isFAQOpen && <Loader />}
+
+        {/* Generate Image Section */}
         {showSample && !isFAQOpen && (
-          <img
-            src={sampleImage || Images.sample3}
-            alt="Sample "
-            className="w-full max-w-[300px] max-h-[300px] rounded-lg shadow-lg"
-          />
+          <div className="relative max-w-[300px] max-h-[300px]">
+            <img
+              src={sampleImage}
+              alt="Generated"
+              className="w-full h-full object-cover rounded-lg shadow-lg"
+            />
+            <img
+              src={Images.frame}
+              alt="Frame"
+              className="absolute top-0 left-0 w-full h-full rounded-b-lg pointer-events-none"
+            />
+          </div>
         )}
 
         {/* FAQ Section */}
