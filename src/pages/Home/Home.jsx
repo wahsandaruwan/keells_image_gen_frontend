@@ -74,25 +74,28 @@ const Home = () => {
   };
   return (
     <div
-      className={`w-full flex items-center justify-center h-full min-h-[100vh] ${
-        !isOTPOpen && !showOTP ? "px-0" : "sm:px-12"
-      }`}
+      className={`w-full flex items-center justify-center h-full min-h-[100vh] px-6 sm:px-12 `}
+      style={{
+        backgroundImage: `url( ${Images.backGroundPage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
     >
       <div
-        className={`w-full h-auto relative sm:w-[550px] flex flex-col items-center gap-10 md:w-[700px] lg:w-[800px] shadow-2xl ${
+        className={`w-full h-auto relative sm:w-[550px] flex flex-col items-center justify-center gap-10 md:w-[700px] lg:w-[800px] shadow-2xl ${
           !isOTPOpen && !showOTP
-            ? "bg-transparent justify-end min-h-[100vh] sm:min-h-[70vh]"
-            : "bg-slate-100 justify-center rounded-lg shadows-lg min-h-[70vh] px-8 py-8"
+            ? "bg-transparent min-h-[100vh] sm:min-h-[70vh]"
+            : "bg-slate-100 rounded-lg shadows-lg min-h-[70vh] px-8 py-8"
         }`}
-        style={{
-          backgroundImage: `url( ${
-            !isOTPOpen && !showOTP && Images.backGround
-          })`,
-          backgroundSize: "100% 100%",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-        }}
       >
+        {!isOTPOpen && !showOTP && (
+          <img
+            src={Images.backGround}
+            alt="Keells Awrudu"
+            className="min-w-[320px] w-[390px] h-auto overflow-hidden"
+          />
+        )}
         {
           <Lottie
             animationData={sunAnimation}

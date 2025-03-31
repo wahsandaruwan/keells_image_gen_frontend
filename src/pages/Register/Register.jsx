@@ -37,7 +37,15 @@ const Register = () => {
     Navigate("/user");
   };
   return (
-    <div className="w-full flex items-center justify-center h-full min-h-[100vh] px-6 sm:px-12">
+    <div
+      className="w-full flex items-center justify-center h-full min-h-[100vh] px-6 sm:px-12"
+      style={{
+        backgroundImage: `url( ${Images.backGroundPage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       <div className=" w-full relative sm:w-[550px] flex flex-col items-center gap-10 md:w-[700px] bg-slate-100 px-8 py-8 lg:w-[800px] rounded-lg shadows-lg justify-center shadow-2xl min-h-[70vh]">
         <Lottie
           animationData={sunAnimation}
@@ -62,15 +70,6 @@ const Register = () => {
             />
           </div>
 
-          <div className="flex flex-col w-full sm:w-2/3">
-            <label className="text-sm md:text-lg font-bold text-gray-700 mb-2">
-              Code <span className="text-red-500 text-lg">*</span>
-            </label>
-            <input
-              placeholder="Enter Your Code"
-              className="bg-white px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-[#6cd454] focus:ring-2 focus:ring-[#6cd454] focus:outline-none transition duration-200"
-            />
-          </div>
           <Recaptcha onVerify={setRecaptchaVerified} />
         </div>
         <button

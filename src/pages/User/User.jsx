@@ -132,6 +132,12 @@ const User = () => {
       className={`w-full flex items-center justify-center h-full min-h-[100vh] px-6 sm:px-12 ${
         isLoad ? "bg-black/50 z-50" : " z-0"
       }`}
+      style={{
+        backgroundImage: `url( ${Images.backGroundPage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
     >
       <div className=" w-full relative sm:w-[550px] flex flex-col items-center gap-10 md:w-[700px] bg-slate-100 px-8 py-8 lg:w-[800px] rounded-lg shadows-lg justify-center shadow-2xl min-h-[70vh]">
         <button
