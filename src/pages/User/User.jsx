@@ -42,7 +42,6 @@ const User = () => {
   const { baseUrl } = useBaseUrl();
 
   useEffect(() => {
-    GetPreviousImages();
     if (playerToken) {
       Navigate("/user");
       return;
@@ -83,6 +82,7 @@ const User = () => {
 
   const HandelViewPreviousImages = () => {
     setViewPreviousImages(true);
+    GetPreviousImages();
   };
 
   const ClosePreviousImages = () => {
@@ -102,8 +102,9 @@ const User = () => {
     // Set the new image as the selected sample image
     setGeneratedImage(img);
 
-    // Remove the selected image from the previous images list
-    setPrevImages((prevImages) => prevImages.filter((image) => image !== img));
+    // console.log(prevImages);
+    // // Remove the selected image from the previous images list
+    // setPrevImages((prevImages) => prevImages.filter((image) => image.imageName !== img));
 
     // Show the sample image after selection
     setShowSample(true);
@@ -123,20 +124,46 @@ const User = () => {
     setIsFAQOpen(false);
   };
 
+  // const HandelShareButtonClick = async () => {
+  //   if (!generatedImage) return;
+
+  //   const hashtags = "#AIArt #GeneratedImage #CreativeAI #DigitalArt";
+  //   const shareData = {
+  //     title: "Generated Image",
+  //     text: `Check out this AI-generated image! ${hashtags}`,
+  //     url: generatedImage,
+  //   };
+
+  //   try {
+  //     await navigator.share(shareData);
+  //   } catch (error) {
+  //     console.error("Error sharing image URL:", error);
+  //   }
+  // };
+
   const HandelShareButtonClick = async () => {
     if (!generatedImage) return;
 
-    const hashtags = "#AIArt #GeneratedImage #CreativeAI #DigitalArt";
-    const shareData = {
-      title: "Generated Image",
-      text: `Check out this AI-generated image! ${hashtags}`,
-      url: generatedImage,
-    };
-
     try {
+      // Fetch the image as a blob
+      const response = await fetch(generatedImage);
+      const blob = await response.blob();
+
+      // Create a file from the blob
+      const file = new File([blob], "generated-image.png", { type: blob.type });
+
+      // Define share data with the image file
+      const hashtags = "#AIArt #GeneratedImage #CreativeAI #DigitalArt";
+      const shareData = {
+        title: "Generated Image",
+        text: `Check out this AI-generated image! ${hashtags}`,
+        files: [file], // Attach the actual image file
+      };
+
+      // Share the image
       await navigator.share(shareData);
     } catch (error) {
-      console.error("Error sharing image URL:", error);
+      console.error("Error sharing image:", error);
     }
   };
 
@@ -152,8 +179,9 @@ const User = () => {
       const response = await axios.post(`${baseUrl}/image/generateimage`, data);
 
       if (response.data.status) {
-        const imageUrl = `https://keellsavuruduai.keellssuper.com/downloads/${response.data.imageName}`;
+        const imageUrl = `http://localhost:3300/downloads/${response.data.imageName}`;
 
+        setShowSample(true);
         setGeneratedImage(imageUrl);
       }
     } catch (error) {
@@ -170,16 +198,27 @@ const User = () => {
       phoneNumber: storedMobile,
     };
 
+    setIsLoad(true);
     try {
       const response = await axios.post(`${baseUrl}/image/getimages`, data);
 
       if (response.data.status && response.data.images?.length > 0) {
-        setPrevImages(response.data.images);
+        let tempArr = [];
+        response.data.images.forEach((item) => {
+          tempArr.push({
+            ...item, // Spread the existing object properties
+            imageName: `http://localhost:3300/downloads/${item.imageName}`, // Modify imageName
+          });
+        });
+        console.log(tempArr);
+        setPrevImages(tempArr);
       } else {
         setPrevImages([]);
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoad(false); // Ensure loading stops after request is completed
     }
   };
 
@@ -268,11 +307,6 @@ const User = () => {
               alt="Generated"
               className="w-full h-full object-cover rounded-lg shadow-lg"
             />
-            <img
-              src={Images.frame}
-              alt="Frame"
-              className="absolute top-0 left-0 w-full h-full rounded-b-lg pointer-events-none"
-            />
           </div>
         )}
 
@@ -333,9 +367,9 @@ const User = () => {
                   prevImages.map((img, index) => (
                     <img
                       key={index}
-                      src={img}
-                      alt={`Sample ${index + 1}`}
-                      onClick={() => HandelSelectPreviousImage(img)}
+                      src={img.imageName}
+                      alt={`Image ${index + 1}`}
+                      onClick={() => HandelSelectPreviousImage(img.imageName)}
                       className="w-1/3 max-w-[150px] max-h-[150px] rounded-lg cursor-pointer shadow-lg"
                     />
                   ))
