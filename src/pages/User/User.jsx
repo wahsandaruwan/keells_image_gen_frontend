@@ -31,12 +31,7 @@ const User = () => {
   const [prompt, setPrompt] = useState("");
   const [attemptsLeft, setAttemptsLeft] = useState(3);
   const [showSample, setShowSample] = useState(false);
-  const [prevImages, setPrevImages] = useState([
-    Images.sample1,
-    Images.sample2,
-    Images.sample3,
-    Images.sample4,
-  ]);
+  const [prevImages, setPrevImages] = useState([]);
   const [generatedImage, setGeneratedImage] = useState(null); // here sample image measn generated image
   const [isOpenShareIcons, setIsOpenShareIcons] = useState(false);
   //const [recaptchaVerified, setRecaptchaVerified] = useState(false);
@@ -47,6 +42,7 @@ const User = () => {
   const { baseUrl } = useBaseUrl();
 
   useEffect(() => {
+    GetPreviousImages();
     if (playerToken) {
       Navigate("/user");
       return;
@@ -165,6 +161,25 @@ const User = () => {
       console.error(error);
     } finally {
       setIsLoad(false); // Ensure loading stops after request is completed
+    }
+  };
+
+  // ---------- Function to get previous Images ----------
+  const GetPreviousImages = async () => {
+    const data = {
+      phoneNumber: storedMobile,
+    };
+
+    try {
+      const response = await axios.post(`${baseUrl}/image/getimages`, data);
+
+      if (response.data.status && response.data.images?.length > 0) {
+        setPrevImages(response.data.images);
+      } else {
+        setPrevImages([]);
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -314,15 +329,21 @@ const User = () => {
                 ❌
               </button>
               <div className="w-full max-h-[300px] overflow-y-auto flex flex-wrap gap-4 mt-6 justify-center">
-                {prevImages.map((img, index) => (
-                  <img
-                    key={index}
-                    src={img}
-                    alt={`Sample ${index + 1}`}
-                    onClick={() => HandelSelectPreviousImage(img)}
-                    className="w-1/3 max-w-[150px] max-h-[150px] rounded-lg cursor-pointer shadow-lg"
-                  />
-                ))}
+                {prevImages.length > 0 ? (
+                  prevImages.map((img, index) => (
+                    <img
+                      key={index}
+                      src={img}
+                      alt={`Sample ${index + 1}`}
+                      onClick={() => HandelSelectPreviousImage(img)}
+                      className="w-1/3 max-w-[150px] max-h-[150px] rounded-lg cursor-pointer shadow-lg"
+                    />
+                  ))
+                ) : (
+                  <div className="w-full h-[50px] flex items-center justify-center">
+                    <p className="font-semibold">No Images Found!</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
