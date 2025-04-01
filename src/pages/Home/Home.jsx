@@ -137,9 +137,7 @@ const Home = () => {
                 showOTP || isFAQOpen ? "hidden" : ""
               }`}
             >
-              {!isOTPOpen && !showOTP
-                ? "Generate"
-                : null}
+              {!isOTPOpen && !showOTP ? "Generate" : null}
             </button>
           </div>
         )}
@@ -209,17 +207,16 @@ const Home = () => {
             Close
           </button>
         )}
-        {
-          isOTPOpen && !showOTP ? <button
-          onClick={HandleButtonClick}
-          className={`bg-[#6cd454] w-6/12 sm:mt-0 sm:w-6/12 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black duration-300 hover:bg-[#aae49d] transition-all ${
-            showOTP || isFAQOpen ? "hidden" : ""
-          }`}
-        >
-          Send
-        </button> : null
-        }
-        
+        {isOTPOpen && !showOTP ? (
+          <button
+            onClick={HandleButtonClick}
+            className={`bg-[#6cd454] w-6/12 sm:mt-0 sm:w-6/12 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black duration-300 hover:bg-[#aae49d] transition-all ${
+              showOTP || isFAQOpen ? "hidden" : ""
+            }`}
+          >
+            Send
+          </button>
+        ) : null}
       </div>
     </div>
   );

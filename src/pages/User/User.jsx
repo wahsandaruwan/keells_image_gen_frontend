@@ -37,7 +37,6 @@ const User = () => {
   const [sampleImage, setSampleImage] = useState(
     "https://picsum.photos/200/300"
   );
-  const [finalImage, setFinalImage] = useState("");
   const [isOpenShareIcons, setIsOpenShareIcons] = useState(false);
   const [recaptchaVerified, setRecaptchaVerified] = useState(false);
   const Navigate = useNavigate();
@@ -130,41 +129,46 @@ const User = () => {
     setIsFAQOpen(false);
   };
 
-  const HandelShareButtonClick = () => {
-    mergeImageWithFrame();
-    setIsOpenShareIcons(true);
-  };
+  const HandelShareButtonClick = async () => {
+    if (!canvasRef.current) return;
 
-  // Function to merge images
-  const mergeImageWithFrame = () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
+    const img = new Image();
+    img.crossOrigin = "anonymous"; // Avoid CORS issues
 
-    const generatedImg = new Image();
-    generatedImg.crossOrigin = "anonymous";
-    generatedImg.src = sampleImage;
+    img.onload = async () => {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0, img.width, img.height);
 
-    const frameImg = new Image();
-    frameImg.crossOrigin = "anonymous";
-    frameImg.src = Images.frame;
+      // Convert canvas to Blob
+      canvas.toBlob(async (blob) => {
+        if (!blob) return;
 
-    generatedImg.onload = () => {
-      frameImg.onload = () => {
-        canvas.width = generatedImg.width;
-        canvas.height = generatedImg.height;
+        // Create a File object
+        const file = new File([blob], "generated-image.png", {
+          type: "image/png",
+        });
 
-        ctx.drawImage(generatedImg, 0, 0, canvas.width, canvas.height);
-        ctx.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
-
-        // Convert canvas to Blob
-        canvas.toBlob((blob) => {
-          if (blob) {
-            const blobUrl = URL.createObjectURL(blob);
-            setFinalImage(blobUrl); // Use Blob URL instead of Base64
+        // Check if Web Share API is available
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({
+              files: [file],
+              title: "Generated Image",
+              text: "Check out this AI-generated image!",
+            });
+          } catch (error) {
+            console.error("Error sharing image:", error);
           }
-        }, "image/png");
-      };
+        } else {
+          alert("Your device doesn't support direct file sharing.");
+        }
+      }, "image/png");
     };
+
+    img.src = sampleImage;
   };
 
   return (
@@ -329,53 +333,6 @@ const User = () => {
                     className="w-1/3 max-w-[150px] max-h-[150px] rounded-lg cursor-pointer shadow-lg"
                   />
                 ))}
-              </div>
-            </div>
-          </div>
-        )}
-        {isOpenShareIcons && showSample && !isFAQOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-7/12 max-w-lg relative">
-              <button
-                onClick={() => setIsOpenShareIcons(false)} // Close the share popup
-                className="absolute top-2 right-2 text-red-500 cursor-pointer text-xl font-bold"
-              >
-                ❌
-              </button>
-              <div className="w-full flex flex-wrap gap-5 mt-6 justify-center">
-                {/* Share buttons */}
-                <EmailShareButton
-                  url={finalImage}
-                  subject="Check this image"
-                  body="Hey, check this out!"
-                  className="hover:scale-110 duration-300 transition-all"
-                >
-                  <EmailIcon size={50} round />
-                </EmailShareButton>
-
-                <FacebookShareButton
-                  url={finalImage}
-                  hashtag="#GeneratedImage"
-                  className="hover:scale-110 duration-300 transition-all"
-                >
-                  <FacebookIcon size={50} round />
-                </FacebookShareButton>
-
-                <WhatsappShareButton
-                  url={finalImage}
-                  title="Check out this image"
-                  className="hover:scale-110 duration-300 transition-all"
-                >
-                  <WhatsappIcon size={50} round />
-                </WhatsappShareButton>
-
-                <TwitterShareButton
-                  url={finalImage}
-                  title="Check out this image"
-                  className="hover:scale-110 duration-300 transition-all"
-                >
-                  <TwitterIcon size={50} round />
-                </TwitterShareButton>
               </div>
             </div>
           </div>
