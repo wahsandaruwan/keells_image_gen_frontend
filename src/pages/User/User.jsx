@@ -198,7 +198,7 @@ const User = () => {
       const response = await axios.post(`${baseUrl}/image/generateimage`, data);
 
       if (response.data.status) {
-        const imageUrl = `http://localhost:3300/downloads/${response.data.imageName}`;
+        const imageUrl = `https://keellsavuruduai.keellssuper.com/downloads/${response.data.imageName}`;
 
         setShowSample(true);
         setGeneratedImage(imageUrl);
@@ -226,7 +226,7 @@ const User = () => {
         response.data.images.forEach((item) => {
           tempArr.push({
             ...item, // Spread the existing object properties
-            imageName: `http://localhost:3300/downloads/${item.imageName}`, // Modify imageName
+            imageName: `https://keellsavuruduai.keellssuper.com/downloads/${item.imageName}`, // Modify imageName
           });
         });
         console.log(tempArr);
