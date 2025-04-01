@@ -29,7 +29,7 @@ const User = () => {
   const [viewPreviousImages, setViewPreviousImages] = useState(false);
   const [isFAQOpen, setIsFAQOpen] = useState(false);
   const [prompt, setPrompt] = useState("");
-  const [attemptsLeft, setAttemptsLeft] = useState(3);
+  const [attemptsLeft, setAttemptsLeft] = useState(0);
   const [showSample, setShowSample] = useState(false);
   const [prevImages, setPrevImages] = useState([]);
   const [generatedImage, setGeneratedImage] = useState(null); // here sample image measn generated image
@@ -62,22 +62,24 @@ const User = () => {
   };
 
   const HandelGenerateButton = () => {
-    if (!isOpenPromtArea) {
-      setIsOpenPromtArea(true); // Open prompt area if it's not open
-    } else {
-      if (!prompt) {
-        alert("Please enter your prompt.");
-        return;
+    GetGenerateAttempts().then(() => {
+      if (!isOpenPromtArea) {
+        setIsOpenPromtArea(true); // Open prompt area if it's not open
+      } else {
+        if (!prompt) {
+          alert("Please enter your prompt.");
+          return;
+        }
+
+        //const promptValidation = PromptValidation(prompt);
+
+        // if (!promptValidation) {
+        //   alert("Please enter valid prompt.");
+        //   return;
+        // }
+        GenerateImage();
       }
-
-      //const promptValidation = PromptValidation(prompt);
-
-      // if (!promptValidation) {
-      //   alert("Please enter valid prompt.");
-      //   return;
-      // }
-      GenerateImage();
-    }
+    });
   };
 
   const HandelViewPreviousImages = () => {
@@ -120,7 +122,7 @@ const User = () => {
     setShowSample(false);
     setIsLoad(false);
     setPrompt("");
-    setAttemptsLeft(3);
+    setAttemptsLeft(0);
     setIsFAQOpen(false);
   };
 
@@ -167,6 +169,23 @@ const User = () => {
     }
   };
 
+  // Function to get generate attempts count
+  const GetGenerateAttempts = async () => {
+    const data = {
+      phoneNumber: storedMobile,
+    };
+    try {
+      const response = await axios.post(`${baseUrl}/players/getplayer`, data);
+
+      if (response.data.status) {
+        setAttemptsLeft(response.data.player.generateAttempts);
+      }
+    } catch (error) {
+      alert(error.response.data.message);
+      console.error(error);
+    }
+  };
+
   // ---------- Function to Generate Image ----------
   const GenerateImage = async () => {
     const data = {
@@ -185,7 +204,7 @@ const User = () => {
         setGeneratedImage(imageUrl);
       }
     } catch (error) {
-      alert(error.response.data.message);
+      alert("Failed to generate the image, try again!");
       console.error(error);
     } finally {
       setIsLoad(false); // Ensure loading stops after request is completed
@@ -236,14 +255,14 @@ const User = () => {
           <CgLogOff />
         </button>
         <div className="absolute top-5 left-5 flex items-center  gap-5">
-          {isOpenPromtArea && generatedImage && (
+          {isOpenPromtArea || generatedImage ? (
             <button
               onClick={HandelBackButton}
               className="cursor-pointer w-[40px] h-[40px] sm:w-[45px] sm:h-[45px] flex items-center justify-center text-2xl sm:text-3xl bg-[#c1d6bb] text-slate-900 hover:text-red-500 transition-all duration-300 rounded-lg font-semibold z-50"
             >
               <MdOutlineArrowBack />
             </button>
-          )}
+          ) : null}
           {!isFAQOpen && !isOpenPromtArea && (
             <button
               onClick={() => setIsFAQOpen(true)}
@@ -280,7 +299,7 @@ const User = () => {
               <span className="text-[15px] sm:text-lg font-semibold text-slate-900">
                 Enter Prompt
               </span>
-              <span className="text-[15px] sm:text-sm text-red-500 font-medium">
+              <span className="text-[15px] sm:text-sm font-medium">
                 Attempts Left: {attemptsLeft}
               </span>
             </div>

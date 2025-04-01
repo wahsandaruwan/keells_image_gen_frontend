@@ -271,7 +271,7 @@ const Home = () => {
         )}
 
         {/* OTP section */}
-        {showOTP && (
+        {showOTP && !isFAQOpen ? (
           <div className="text-center flex flex-col items-center w-full ">
             <span className="text-[15px] sm:text-[16px] font-bold text-center">
               Enter OTP
@@ -296,7 +296,7 @@ const Home = () => {
               Verify
             </button>
           </div>
-        )}
+        ) : null}
 
         {/* FAQ Section */}
         {isFAQOpen && <FAQ />}
