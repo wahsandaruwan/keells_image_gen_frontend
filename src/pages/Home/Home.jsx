@@ -5,6 +5,8 @@ import Lottie from "lottie-react";
 import { Recaptcha, FAQ } from "../../components/atoms";
 import { MobileNumberValidation } from "../../validations";
 import { FaQuestionCircle } from "react-icons/fa";
+import { useBaseUrl } from "../../context/BaseUrl/BaseUrlContext";
+import axios from "axios";
 
 const Home = () => {
   const [sunAnimation, setSunAnimation] = useState(null);
@@ -14,11 +16,27 @@ const Home = () => {
   const [showOTP, setShowOTP] = useState(false);
   const [recaptchaVerified, setRecaptchaVerified] = useState(false);
   const [mobile, setMobile] = useState("");
+  const [mobileStatus, setMobileStatus] = useState("");
   const inputsRef = useRef([]);
   const Navigate = useNavigate();
 
+  const playerToken = localStorage.getItem("playerToken");
+
+  const { baseUrl } = useBaseUrl();
+
+  // useEffect(() => {
+  //   if(playerToken){
+  //     Navigate("/user");
+  //   }
+  // },[playerToken]);
+
   const HandleButtonClick = () => {
     const mobileValidation = MobileNumberValidation(mobile);
+
+    if (playerToken) {
+      Navigate("/user");
+      return;
+    }
 
     if (!isOTPOpen) {
       setIsOTPOpen(true);
@@ -37,11 +55,13 @@ const Home = () => {
       return;
     }
 
-    if (isOTPOpen && !showOTP) {
-      setIsOTPOpen(false);
-      setShowOTP(true);
-      return;
-    }
+    CheckMobileNumberAvailability();
+
+    // if (isOTPOpen && !showOTP) {
+    //   setIsOTPOpen(false);
+    //   setShowOTP(true);
+    //   return;
+    // }
   };
 
   useEffect(() => {
@@ -66,23 +86,105 @@ const Home = () => {
     }
   };
 
+  // ---------- Function to check mobile number availability ----------
+  const CheckMobileNumberAvailability = async () => {
+    const data = {
+      phoneNumber: mobile,
+    };
+
+    try {
+      const response = await axios.post(`${baseUrl}/players/checkphone`, data);
+
+      console.log(response);
+      if (response.data.status) {
+        setMobileStatus(response.data.phoneExist);
+        setIsOTPOpen(false);
+        setShowOTP(true);
+        localStorage.setItem("userMobile", mobile);
+        GetOTPCode();
+        return;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // ---------- Function to get otp code ----------
+  const GetOTPCode = async () => {
+    const data = {
+      phoneNumber: mobile,
+    };
+
+    try {
+      const response = await axios.post(`${baseUrl}/otp/generateotp`, data);
+
+      if (response.data.status) {
+        //ValidateOTPCode();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // ---------- Function to verify button click ----------
   const HandelVerifyButtonClick = () => {
     if (OTP.some((digit) => digit === "")) {
       alert("Please enter OTP.");
       return;
     }
-    Navigate("/register");
+    ValidateOTPCode();
   };
+
+  // ---------- Function to validate otp code ----------
+  const ValidateOTPCode = async () => {
+    const data = {
+      phoneNumber: mobile,
+      otpCode: OTP.join(""),
+    };
+    console.log(data);
+    try {
+      const response = await axios.post(`${baseUrl}/otp/validateotp`, data);
+
+      if (response.data.status && !mobileStatus) {
+        Navigate("/register");
+        return;
+      } else if (response.data.status && mobileStatus) {
+        LoginUser();
+        return;
+      } else {
+        alert("Enter valid OTP");
+        setOTP(["", "", "", ""]);
+        return;
+      }
+    } catch (error) {
+      alert(error.response.data.message);
+      console.error(error);
+    }
+  };
+
+  // ---------- Function to Login User ----------
+  const LoginUser = async () => {
+    const data = {
+      phoneNumber: mobile,
+    };
+
+    try {
+      const response = await axios.post(`${baseUrl}/players/loginuser`, data);
+      if (response.data.status) {
+        localStorage.setItem("playerToken", response.data.user.playerToken);
+        localStorage.setItem("playerName", response.data.user.name);
+        localStorage.setItem("userMobile", response.data.user.phoneNumber);
+        Navigate("/user");
+        return;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div
       className={`w-full flex items-center justify-center h-full min-h-[100vh] px-6 sm:px-12 `}
-      style={{
-        backgroundImage: `url( ${Images.backGroundPage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        overflow: "hidden",
-      }}
     >
       <div
         className={`w-full h-full relative sm:w-[550px] flex flex-col items-center justify-center gap-10 md:w-[700px] lg:w-[800px]  ${

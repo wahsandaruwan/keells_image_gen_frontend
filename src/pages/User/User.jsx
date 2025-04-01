@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Images, Animations } from "../../constants";
 //import Lottie from "lottie-react";
 import { useNavigate } from "react-router";
@@ -13,15 +13,18 @@ import {
   FacebookIcon,
   TwitterIcon,
 } from "react-share";
-import { Recaptcha, FAQ } from "../../components/atoms";
+import { FAQ } from "../../components/atoms";
 import { CgLogOff } from "react-icons/cg";
 import { MdOutlineArrowBack } from "react-icons/md";
 import { PromptValidation } from "../../validations";
 import { FaQuestionCircle } from "react-icons/fa";
+import { useBaseUrl } from "../../context/BaseUrl/BaseUrlContext";
+import axios from "axios";
 
 const User = () => {
   //const [sunAnimation, setSunAnimation] = useState(null);
   const [isLoad, setIsLoad] = useState(false);
+  const userName = localStorage.getItem("playerName");
   const [isOpenPromtArea, setIsOpenPromtArea] = useState(false);
   const [viewPreviousImages, setViewPreviousImages] = useState(false);
   const [isFAQOpen, setIsFAQOpen] = useState(false);
@@ -34,26 +37,31 @@ const User = () => {
     Images.sample3,
     Images.sample4,
   ]);
-  const [sampleImage, setSampleImage] = useState(
-    "https://picsum.photos/200/300"
-  );
+  const [generatedImage, setGeneratedImage] = useState(null); // here sample image measn generated image
   const [isOpenShareIcons, setIsOpenShareIcons] = useState(false);
-  const [recaptchaVerified, setRecaptchaVerified] = useState(false);
+  //const [recaptchaVerified, setRecaptchaVerified] = useState(false);
   const Navigate = useNavigate();
   const canvasRef = useRef(null);
+  const storedMobile = localStorage.getItem("userMobile");
+  const playerToken = localStorage.getItem("playerToken");
+  const { baseUrl } = useBaseUrl();
 
-  // useEffect(() => {
-  //   // Fetch both animation files
-  //   Promise.all([fetch(Animations.sun).then((response) => response.json())])
-  //     .then(([headerData]) => {
-  //       setSunAnimation(headerData);
-  //     })
-  //     .catch((error) => console.error("Failed to load animations:", error));
-  // }, []);
+  useEffect(() => {
+    if (playerToken) {
+      Navigate("/user");
+      return;
+    } else if (!playerToken && !storedMobile) {
+      Navigate("/");
+      return;
+    }
+  }, []);
 
   const HandelLogOutButon = () => {
     const confirmLogout = window.confirm("Are you sure you want to log out?");
     if (confirmLogout) {
+      localStorage.removeItem("playerToken");
+      localStorage.removeItem("userMobile");
+      localStorage.removeItem("playerName");
       Navigate("/");
     }
   };
@@ -66,23 +74,14 @@ const User = () => {
         alert("Please enter your prompt.");
         return;
       }
-      if (!recaptchaVerified) {
-        alert("Please verify the reCAPTCHA.");
-        return;
-      }
 
-      const promptValidation = PromptValidation(prompt);
+      //const promptValidation = PromptValidation(prompt);
 
-      if (!promptValidation) {
-        alert("Please enter valid prompt.");
-        return;
-      }
-
-      setIsLoad(true); // Start loading while the image is being generated
-      setTimeout(() => {
-        setIsLoad(false); // Stop loading after 2 seconds
-        setShowSample(true); // Show the generated image (or sample)
-      }, 2000);
+      // if (!promptValidation) {
+      //   alert("Please enter valid prompt.");
+      //   return;
+      // }
+      GenerateImage();
     }
   };
 
@@ -98,14 +97,14 @@ const User = () => {
     // Save the currently selected sample image back into the previous images array before setting the new one
     setPrevImages((prevImages) => {
       // Add the current sample image (if any) back to the previous images list
-      if (sampleImage) {
-        return [...prevImages, sampleImage];
+      if (generatedImage) {
+        return [...prevImages, generatedImage];
       }
       return prevImages;
     });
 
     // Set the new image as the selected sample image
-    setSampleImage(img);
+    setGeneratedImage(img);
 
     // Remove the selected image from the previous images list
     setPrevImages((prevImages) => prevImages.filter((image) => image !== img));
@@ -125,50 +124,48 @@ const User = () => {
     setIsLoad(false);
     setPrompt("");
     setAttemptsLeft(3);
-    setRecaptchaVerified(false);
     setIsFAQOpen(false);
   };
 
   const HandelShareButtonClick = async () => {
-    if (!canvasRef.current) return;
+    if (!generatedImage) return;
 
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    const img = new Image();
-    img.crossOrigin = "anonymous"; // Avoid CORS issues
-
-    img.onload = async () => {
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx.drawImage(img, 0, 0, img.width, img.height);
-
-      // Convert canvas to Blob
-      canvas.toBlob(async (blob) => {
-        if (!blob) return;
-
-        // Create a File object
-        const file = new File([blob], "generated-image.png", {
-          type: "image/png",
-        });
-
-        // Check if Web Share API is available
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          try {
-            await navigator.share({
-              files: [file],
-              title: "Generated Image",
-              text: "Check out this AI-generated image!",
-            });
-          } catch (error) {
-            console.error("Error sharing image:", error);
-          }
-        } else {
-          alert("Your device doesn't support direct file sharing.");
-        }
-      }, "image/png");
+    const hashtags = "#AIArt #GeneratedImage #CreativeAI #DigitalArt";
+    const shareData = {
+      title: "Generated Image",
+      text: `Check out this AI-generated image! ${hashtags}`,
+      url: generatedImage,
     };
 
-    img.src = sampleImage;
+    try {
+      await navigator.share(shareData);
+    } catch (error) {
+      console.error("Error sharing image URL:", error);
+    }
+  };
+
+  // ---------- Function to Generate Image ----------
+  const GenerateImage = async () => {
+    const data = {
+      userPrompt: prompt,
+      playerToken: playerToken,
+      phoneNumber: storedMobile,
+    };
+    setIsLoad(true);
+    try {
+      const response = await axios.post(`${baseUrl}/image/generateimage`, data);
+
+      if (response.data.status) {
+        const imageUrl = `https://keellsavuruduai.keellssuper.com/downloads/${response.data.imageName}`;
+
+        setGeneratedImage(imageUrl);
+      }
+    } catch (error) {
+      alert(error.response.data.message);
+      console.error(error);
+    } finally {
+      setIsLoad(false); // Ensure loading stops after request is completed
+    }
   };
 
   return (
@@ -176,13 +173,6 @@ const User = () => {
       className={`w-full flex items-center justify-center h-full min-h-[100vh] px-6 sm:px-12 ${
         isLoad ? "bg-black/50 z-50" : " z-0"
       }`}
-      style={{
-        backgroundImage: `url( ${Images.backGroundPage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        overflow: "hidden",
-      }}
     >
       <div className=" w-full relative sm:w-[550px] flex flex-col items-center gap-10 md:w-[700px] bg-slate-100 px-8 py-8 lg:w-[800px] rounded-lg shadows-lg justify-center shadow-2xl min-h-[70vh]">
         <button
@@ -192,7 +182,7 @@ const User = () => {
           <CgLogOff />
         </button>
         <div className="absolute top-5 left-5 flex items-center  gap-5">
-          {isOpenPromtArea && sampleImage && (
+          {isOpenPromtArea && generatedImage && (
             <button
               onClick={HandelBackButton}
               className="cursor-pointer w-[40px] h-[40px] sm:w-[45px] sm:h-[45px] flex items-center justify-center text-2xl sm:text-3xl bg-[#c1d6bb] text-slate-900 hover:text-red-500 transition-all duration-300 rounded-lg font-semibold z-50"
@@ -225,7 +215,7 @@ const User = () => {
         {/* Start Section */}
         {!isOpenPromtArea && !showSample && !isFAQOpen && (
           <span className="sm:text-[2rem] text-[1.3rem] font-bold text-center text-slate-900">
-            Hi Kamal
+            Hi {userName}
           </span>
         )}
 
@@ -243,12 +233,12 @@ const User = () => {
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              className="w-full h-32 p-3 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#6cd454]"
+              className="w-full h-32 p-3 rounded-lg resize-none border-2 border-gray-300 focus:border-[#6cd454] focus:ring-2 focus:ring-[#6cd454] focus:outline-none"
               placeholder="Type your prompt here..."
             />
-            <div className="flex items-center justify-center w-full">
+            {/* <div className="flex items-center justify-center w-full">
               <Recaptcha onVerify={setRecaptchaVerified} />
-            </div>
+            </div> */}
           </div>
         )}
 
@@ -259,7 +249,7 @@ const User = () => {
         {showSample && !isFAQOpen && (
           <div className="relative max-w-[300px] max-h-[300px]">
             <img
-              src={sampleImage}
+              src={generatedImage}
               alt="Generated"
               className="w-full h-full object-cover rounded-lg shadow-lg"
             />

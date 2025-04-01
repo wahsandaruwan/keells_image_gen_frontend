@@ -2,16 +2,32 @@ import React, { useEffect, useState } from "react";
 import { Images, Animations } from "../../constants";
 import Lottie from "lottie-react";
 import { useNavigate } from "react-router";
-import { Recaptcha, FAQ } from "../../components/atoms";
+import { FAQ } from "../../components/atoms";
 import { UserNameValidation } from "../../validations";
 import { FaQuestionCircle } from "react-icons/fa";
+import { useBaseUrl } from "../../context/BaseUrl/BaseUrlContext";
+import axios from "axios";
 
 const Register = () => {
   const [sunAnimation, setSunAnimation] = useState(null);
   const [isFAQOpen, setIsFAQOpen] = useState(false);
-  const [recaptchaVerified, setRecaptchaVerified] = useState(false);
+  //const [recaptchaVerified, setRecaptchaVerified] = useState(false);
   const [UserName, setUserName] = useState("");
+  const storedMobile = localStorage.getItem("userMobile");
+  const { baseUrl } = useBaseUrl();
   const Navigate = useNavigate();
+
+  const playerToken = localStorage.getItem("playerToken");
+
+  useEffect(() => {
+    if (playerToken) {
+      Navigate("/user");
+      return;
+    } else if (!playerToken && !storedMobile) {
+      Navigate("/");
+      return;
+    }
+  }, []);
 
   useEffect(() => {
     // Fetch both animation files
@@ -28,27 +44,42 @@ const Register = () => {
       alert("Please enter your user name .");
       return;
     }
-    if (!recaptchaVerified) {
-      alert("Please verify the reCAPTCHA.");
-      return;
-    }
+    // if (!recaptchaVerified) {
+    //   alert("Please verify the reCAPTCHA.");
+    //   return;
+    // }
     if (!userNameValidation) {
       alert("Please enter valid user name .");
       return;
     }
-    Navigate("/user");
+    RegisterUser();
+  };
+
+  // ---------- Function to Register  new user ----------
+  const RegisterUser = async () => {
+    const data = {
+      phoneNumber: storedMobile,
+      name: UserName,
+    };
+
+    try {
+      const response = await axios.post(
+        `${baseUrl}/players/registeruser`,
+        data
+      );
+
+      if (response.data.status) {
+        localStorage.setItem("playerToken", response.data.user.playerToken);
+        localStorage.setItem("playerName", response.data.user.name);
+        Navigate("/user");
+        return;
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
   return (
-    <div
-      className="w-full flex items-center justify-center h-full min-h-[100vh] px-6 sm:px-12"
-      style={{
-        backgroundImage: `url( ${Images.backGroundPage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        overflow: "hidden",
-      }}
-    >
+    <div className="w-full flex items-center justify-center h-full min-h-[100vh] px-6 sm:px-12">
       <div className=" w-full relative sm:w-[550px] flex flex-col items-center gap-10 md:w-[700px] bg-slate-100 px-8 py-8 lg:w-[800px] rounded-lg shadows-lg justify-center shadow-2xl min-h-[70vh]">
         <Lottie
           animationData={sunAnimation}
@@ -85,7 +116,7 @@ const Register = () => {
               />
             </div>
 
-            <Recaptcha onVerify={setRecaptchaVerified} />
+            {/* <Recaptcha onVerify={setRecaptchaVerified} /> */}
           </div>
         )}
 
