@@ -124,6 +124,7 @@ const User = () => {
     setPrompt("");
     setAttemptsLeft(0);
     setIsFAQOpen(false);
+    setGeneratedImage(null);
   };
 
   // const HandelShareButtonClick = async () => {
@@ -158,7 +159,7 @@ const User = () => {
       const hashtags = "#KeellsAiAvurudu";
       const shareData = {
         title: "Generated Image",
-        text: `Check out this AI-generated image! ${hashtags}`,
+        text: `${hashtags}`,
         files: [file], // Attach the actual image file
       };
 
@@ -205,7 +206,7 @@ const User = () => {
       }
     } catch (error) {
       alert(
-        "Unable to show generated image, We're committed to making the Keells Avurudu AI experience safe & enjoyable. Please try rephrasing your prompt!"
+        "Unable to show generated image. We're committed to making the Keells Avurudu AI experience safe & enjoyable. Please try rephrasing your prompt."
       );
       console.error(error);
     } finally {
@@ -322,7 +323,7 @@ const User = () => {
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 className="w-full h-32 p-3 rounded-lg resize-none border-2 border-gray-300 focus:border-[#6cd454] focus:ring-2 focus:ring-[#6cd454] focus:outline-none"
-                placeholder="Enter your favourite Avurudu moment in English, සිංහල, or தமிழ், and let us turn it into magical art!"
+                placeholder="Imagine Avurudu your way! Type in English, ංහල, or தமிழ, and watch it come to life as an image!"
               />
               {/* <div className="flex items-center justify-center w-full">
               <Recaptcha onVerify={setRecaptchaVerified} />

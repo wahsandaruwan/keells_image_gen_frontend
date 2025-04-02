@@ -1,11 +1,23 @@
 import React, { useState } from "react";
-import { FAQData } from "../../../data";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { useLocation } from "react-router";
+import { FaArrowDown } from "react-icons/fa";
 
 const FAQ = () => {
-  const [expandedQuestion, setExpandedQuestion] = useState(null);
+  const [scrollPercentage, setScrollPercentage] = useState(0);
+  const [showScrollHint, setShowScrollHint] = useState(true);
   const location = useLocation();
+
+  // Handle scroll event
+  const handleScroll = (event) => {
+    const element = event.target;
+    const scrollTop = element.scrollTop;
+    const scrollHeight = element.scrollHeight - element.clientHeight;
+    const percentage = (scrollTop / scrollHeight) * 100;
+
+    setScrollPercentage(percentage);
+    setShowScrollHint(scrollTop < 10); // Hide hint after first scroll
+  };
+
   return (
     <div
       className={`w-full sm:w-2/3 max-h-[600px] ${
@@ -15,36 +27,48 @@ const FAQ = () => {
       <h2 className="text-[15px] sm:text-[16px] font-bold text-center">
         Notes
       </h2>
-      <div className="w-full space-y-3 overflow-y-auto mt-4 max-h-[200px]">
-        {/* {FAQData.map((faq, index) => (
-          <div key={index} className="border-b pb-3">
-            <button
-              onClick={() =>
-                setExpandedQuestion(expandedQuestion === index ? null : index)
-              }
-              className="w-full flex justify-between items-center py-2 text-left font-medium text-[13px] sm:text-[14px] focus:outline-none"
-            >
-              {faq.question}
-              {expandedQuestion === index ? (
-                <FaChevronUp className="text-gray-600" />
-              ) : (
-                <FaChevronDown className="text-gray-600" />
-              )}
-            </button>
-            {expandedQuestion === index && (
-              <p className="text-gray-700 mt-2 text-[13px] sm:text-[14px]">
-                {faq.answer}
-              </p>
-            )}
+
+      {/* Scroll Progress Bar */}
+      <div
+        className="h-1 bg-[#6cd454] transition-all sm:hidden mt-2 duration-200"
+        style={{ width: `${scrollPercentage}%` }}
+      ></div>
+
+      {/* Scrollable Content */}
+      <div
+        className={`relative w-full mt-4 ${
+          location.pathname == "/user" ? "max-h-[230px]" : "max-h-[300px]"
+        } overflow-y-scroll px-4 py-2 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100`}
+        onScroll={handleScroll}
+      >
+        {/* Scroll Hint (Hidden after first scroll) */}
+        {showScrollHint && (
+          <div className="absolute bottom-2 left-1/2 sm:hidden transform -translate-x-1/2 animate-bounce text-gray-500">
+            <FaArrowDown size={20} />
           </div>
-        ))} */}
-        <p>Keells Avurudu AI supports English, සිංහල, and தமிழ், ensuring an
-        inclusive experience for all users.</p> 
-        <p>To generate high-quality AI images, be specific and detailed in your prompt.</p>
+        )}
+
+        {/* FAQ Content */}
+        <p>
+          Keells Avurudu AI supports English, සිංහල, and தமிழ், ensuring an
+          inclusive experience for all users.
+        </p>
+        <p>
+          To generate high-quality AI images, be specific and detailed in your
+          prompt.
+        </p>
         <p>Use Concise and Structured Language</p>
         <p>❌ "A New Year food table"</p>
-        <p>✅ "Sinhala New Year feast with kiribath, kokis, kavum, sweet mung kavum, fresh fruits, and a glowing clay oil lamp."</p>
-        <p>Keells Avurudu AI also includes safeguards to protect minors, restricting queries that could generate outputs related to children. We are committed to ensuring a safe, enjoyable, and responsible AI experience for all users, with strict content guidelines in place.</p>
+        <p>
+          ✅ "Sinhala New Year feast with kiribath, kokis, kavum, sweet mung
+          kavum, fresh fruits, and a glowing clay oil lamp."
+        </p>
+        <p>
+          Keells Avurudu AI also includes safeguards to protect minors,
+          restricting queries that could generate outputs related to children.
+          We are committed to ensuring a safe, enjoyable, and responsible AI
+          experience for all users, with strict content guidelines in place.
+        </p>
       </div>
     </div>
   );
