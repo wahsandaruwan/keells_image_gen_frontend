@@ -204,7 +204,9 @@ const User = () => {
         setGeneratedImage(imageUrl);
       }
     } catch (error) {
-      alert("Unable to show generated image, We're committed to making the Keells Avurudu AI experience safe & enjoyable. Please try rephrasing your prompt!");
+      alert(
+        "Unable to show generated image, We're committed to making the Keells Avurudu AI experience safe & enjoyable. Please try rephrasing your prompt!"
+      );
       console.error(error);
     } finally {
       setIsLoad(false); // Ensure loading stops after request is completed
@@ -279,11 +281,20 @@ const User = () => {
           className="w-30 z-50 absolute top-5 right-5 md:w-35"
           style={{ background: "transparent" }}
         /> */}
-        <img
-          src={Images.mainLogo}
-          alt="Logo"
-          className="sm:w-[200px] w-[120px]"
-        />
+
+        {showSample && !isFAQOpen ? (
+          <img
+            src={Images.mainLogo}
+            alt="Logo"
+            className="sm:w-[200px] w-[120px]"
+          />
+        ) : (
+          <img
+            src={Images.mainLogo}
+            alt="Logo"
+            className="sm:w-[300px] w-[200px]"
+          />
+        )}
 
         {/* Start Section */}
         {!isOpenPromtArea && !showSample && !isFAQOpen && (
@@ -293,31 +304,35 @@ const User = () => {
         )}
 
         {/* Prompt Section */}
-        {isOpenPromtArea && !isLoad && !showSample && !isFAQOpen && attemptsLeft != 0 && (
-          <div className="w-full flex flex-col gap-4">
-            <div className="flex items-center justify-between">
-              <span className="text-[15px] sm:text-lg font-semibold text-slate-900">
-                Enter Prompt
-              </span>
-              <span className="text-[15px] sm:text-sm font-medium">
-                Attempts Left: {attemptsLeft}
-              </span>
-            </div>
-            <textarea
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              className="w-full h-32 p-3 rounded-lg resize-none border-2 border-gray-300 focus:border-[#6cd454] focus:ring-2 focus:ring-[#6cd454] focus:outline-none"
-              placeholder="Type your vision in සිංහල, English or தமிழ் here"
-            />
-            {/* <div className="flex items-center justify-center w-full">
+        {isOpenPromtArea &&
+          !isLoad &&
+          !showSample &&
+          !isFAQOpen &&
+          attemptsLeft != 0 && (
+            <div className="w-full flex flex-col gap-4">
+              <div className="flex items-center justify-between">
+                <span className="text-[15px] sm:text-lg font-semibold text-slate-900">
+                  Enter Prompt
+                </span>
+                <span className="text-[15px] sm:text-sm font-medium">
+                  Attempts Left: {attemptsLeft}
+                </span>
+              </div>
+              <textarea
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                className="w-full h-32 p-3 rounded-lg resize-none border-2 border-gray-300 focus:border-[#6cd454] focus:ring-2 focus:ring-[#6cd454] focus:outline-none"
+                placeholder="Enter your favourite Avurudu moment in English, සිංහල, or தமிழ், and let us turn it into magical art!"
+              />
+              {/* <div className="flex items-center justify-center w-full">
               <Recaptcha onVerify={setRecaptchaVerified} />
             </div> */}
-          </div>
-        )}
+            </div>
+          )}
 
-        {
-          isOpenPromtArea && attemptsLeft == 0 ? <p className="text-xl">Thank you for participating!</p> : null
-        }
+        {isOpenPromtArea && attemptsLeft == 0 ? (
+          <p className="text-xl">Thank you for participating!</p>
+        ) : null}
 
         {/* Loader */}
         {isLoad && !isFAQOpen && <Loader />}

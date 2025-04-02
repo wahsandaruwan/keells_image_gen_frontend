@@ -13,10 +13,10 @@ const FAQ = () => {
       }`}
     >
       <h2 className="text-[15px] sm:text-[16px] font-bold text-center">
-        Frequently Asked Questions
+        Notes
       </h2>
       <div className="w-full space-y-3 overflow-y-auto mt-4 max-h-[200px]">
-        {FAQData.map((faq, index) => (
+        {/* {FAQData.map((faq, index) => (
           <div key={index} className="border-b pb-3">
             <button
               onClick={() =>
@@ -37,7 +37,14 @@ const FAQ = () => {
               </p>
             )}
           </div>
-        ))}
+        ))} */}
+        <p>Keells Avurudu AI supports English, සිංහල, and தமிழ், ensuring an
+        inclusive experience for all users.</p> 
+        <p>To generate high-quality AI images, be specific and detailed in your prompt.</p>
+        <p>Use Concise and Structured Language</p>
+        <p>❌ "A New Year food table"</p>
+        <p>✅ "Sinhala New Year feast with kiribath, kokis, kavum, sweet mung kavum, fresh fruits, and a glowing clay oil lamp."</p>
+        <p>Keells Avurudu AI also includes safeguards to protect minors, restricting queries that could generate outputs related to children. We are committed to ensuring a safe, enjoyable, and responsible AI experience for all users, with strict content guidelines in place.</p>
       </div>
     </div>
   );
