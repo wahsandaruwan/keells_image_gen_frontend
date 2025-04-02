@@ -155,7 +155,7 @@ const User = () => {
       const file = new File([blob], "generated-image.png", { type: blob.type });
 
       // Define share data with the image file
-      const hashtags = "#AIArt #GeneratedImage #CreativeAI #DigitalArt";
+      const hashtags = "#KeellsAiAvurudu";
       const shareData = {
         title: "Generated Image",
         text: `Check out this AI-generated image! ${hashtags}`,
@@ -204,7 +204,7 @@ const User = () => {
         setGeneratedImage(imageUrl);
       }
     } catch (error) {
-      alert("Failed to generate the image, try again!");
+      alert("Unable to show generated image, We're committed to making the Keells Avurudu AI experience safe & enjoyable. Please try rephrasing your prompt!");
       console.error(error);
     } finally {
       setIsLoad(false); // Ensure loading stops after request is completed
@@ -293,7 +293,7 @@ const User = () => {
         )}
 
         {/* Prompt Section */}
-        {isOpenPromtArea && !isLoad && !showSample && !isFAQOpen && (
+        {isOpenPromtArea && !isLoad && !showSample && !isFAQOpen && attemptsLeft != 0 && (
           <div className="w-full flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <span className="text-[15px] sm:text-lg font-semibold text-slate-900">
@@ -307,13 +307,17 @@ const User = () => {
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               className="w-full h-32 p-3 rounded-lg resize-none border-2 border-gray-300 focus:border-[#6cd454] focus:ring-2 focus:ring-[#6cd454] focus:outline-none"
-              placeholder="Type your prompt here..."
+              placeholder="Type your vision in සිංහල, English or தமிழ் here"
             />
             {/* <div className="flex items-center justify-center w-full">
               <Recaptcha onVerify={setRecaptchaVerified} />
             </div> */}
           </div>
         )}
+
+        {
+          isOpenPromtArea && attemptsLeft == 0 ? <p className="text-xl">Thank you for participating!</p> : null
+        }
 
         {/* Loader */}
         {isLoad && !isFAQOpen && <Loader />}
@@ -357,7 +361,7 @@ const User = () => {
               onClick={HandelGenerateButton}
               className={`bg-[#6cd454] w-full sm:w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black hover:bg-[#aae49d] duration-300 transition-all ${
                 showSample ? "hidden" : ""
-              }`}
+              } ${isOpenPromtArea && attemptsLeft == 0 ? "hidden" : ""}`}
             >
               {!isOpenPromtArea && !showSample ? "Generate" : "Send"}
             </button>
@@ -394,7 +398,7 @@ const User = () => {
                   ))
                 ) : (
                   <div className="w-full h-[50px] flex items-center justify-center">
-                    <p className="font-semibold">No Images Found!</p>
+                    <p className="font-semibold">Fetching...</p>
                   </div>
                 )}
               </div>

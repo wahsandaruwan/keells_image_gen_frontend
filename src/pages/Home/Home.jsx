@@ -146,9 +146,11 @@ const Home = () => {
       const response = await axios.post(`${baseUrl}/otp/validateotp`, data);
 
       if (response.data.status && !mobileStatus) {
+        alert("OTP validated successfully!");
         Navigate("/register");
         return;
       } else if (response.data.status && mobileStatus) {
+        alert("OTP validated successfully!");
         LoginUser();
         return;
       } else {
@@ -208,8 +210,8 @@ const Home = () => {
           <div
             style={{
               position: "relative",
-              width: "400px",
-              height: "600px",
+              width: "350px",
+              height: "550px",
               overflow: "hidden",
               display: "flex",
               justifyContent: "center",
