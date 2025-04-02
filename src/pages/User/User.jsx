@@ -323,7 +323,7 @@ const User = () => {
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 className="w-full h-32 p-3 rounded-lg resize-none border-2 border-gray-300 focus:border-[#6cd454] focus:ring-2 focus:ring-[#6cd454] focus:outline-none"
-                placeholder="Imagine Avurudu your way! Type in English, ංහල, or தமிழ, and watch it come to life as an image!"
+                placeholder="Imagine Avurudu your way! Type in English, සිංහල, or தமிழ, and watch it come to life as an image!"
               />
               {/* <div className="flex items-center justify-center w-full">
               <Recaptcha onVerify={setRecaptchaVerified} />
