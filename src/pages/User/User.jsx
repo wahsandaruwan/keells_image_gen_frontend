@@ -205,6 +205,10 @@ const User = () => {
 
         setShowSample(true);
         setGeneratedImage(imageUrl);
+      } else {
+        alert(
+          "Unable to show generated image. We're committed to making the Keells Avurudu AI experience safe & enjoyable. Please try rephrasing your prompt."
+        );
       }
     } catch (error) {
       alert(
@@ -253,7 +257,10 @@ const User = () => {
         isLoad ? "bg-black/50 z-50" : " z-0"
       }`}
     >
-      <div style={{backgroundColor: "#ffffff"}} className=" w-full relative sm:w-[550px] flex flex-col items-center gap-10 md:w-[700px] bg-slate-100 px-8 py-8 lg:w-[800px] rounded-lg shadows-lg justify-center shadow-2xl min-h-[70vh]">
+      <div
+        style={{ backgroundColor: "#ffffff" }}
+        className=" w-full relative sm:w-[550px] flex flex-col items-center gap-10 md:w-[700px] bg-slate-100 px-8 py-8 lg:w-[800px] rounded-lg shadows-lg justify-center shadow-2xl min-h-[70vh]"
+      >
         <button
           onClick={HandelLogOutButon}
           className="cursor-pointer w-[40px] h-[40px] sm:w-[45px] sm:h-[45px] flex items-center justify-center text-2xl sm:text-3xl bg-[#c1d6bb] text-slate-900 hover:text-red-500 transition-all duration-300 rounded-lg font-semibold z-50 absolute top-5 right-5"
@@ -364,40 +371,45 @@ const User = () => {
         )}
 
         {/* Sample Image Section */}
-        <div className="w-full flex  flex-col items-center gap-5">
-          {showSample && !isFAQOpen && (
-            <button
-              onClick={HandelShareButtonClick}
-              className={`bg-[#6cd454] w-full sm:w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black hover:bg-[#aae49d] duration-300 transition-all ${
-                isOpenShareIcons ? "hidden" : ""
-              }`}
-            >
-              Share
-            </button>
-          )}
-          {!isFAQOpen && (
-            <button
-              onClick={HandelGenerateButton}
-              className={`bg-[#6cd454] w-full sm:w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black hover:bg-[#aae49d] duration-300 transition-all ${
-                showSample ? "hidden" : ""
-              } ${isOpenPromtArea && attemptsLeft == 0 ? "hidden" : ""}`}
-            >
-              {!isOpenPromtArea && !showSample ? "Generate" : "Send"}
-            </button>
-          )}
-          {isOpenPromtArea && !isFAQOpen && (
-            <button
-              disabled={isLoad}
-              onClick={HandelViewPreviousImages}
-              className="bg-[#6cd454] w-full sm:w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black hover:bg-[#aae49d] duration-300 transition-all"
-            >
-              View Previous Generations
-            </button>
-          )}
-        </div>
+        {!isLoad ? (
+          <div className="w-full flex  flex-col items-center gap-5">
+            {showSample && !isFAQOpen && (
+              <button
+                onClick={HandelShareButtonClick}
+                className={`bg-[#6cd454] w-full sm:w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black hover:bg-[#aae49d] duration-300 transition-all ${
+                  isOpenShareIcons ? "hidden" : ""
+                }`}
+              >
+                Share
+              </button>
+            )}
+            {!isFAQOpen && !isLoad && (
+              <button
+                onClick={HandelGenerateButton}
+                className={`bg-[#6cd454] w-full sm:w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black hover:bg-[#aae49d] duration-300 transition-all ${
+                  showSample ? "hidden" : ""
+                } ${isOpenPromtArea && attemptsLeft == 0 ? "hidden" : ""}`}
+              >
+                {!isOpenPromtArea && !showSample ? "Generate" : "Send"}
+              </button>
+            )}
+            {isOpenPromtArea && !isFAQOpen && (
+              <button
+                disabled={isLoad}
+                onClick={HandelViewPreviousImages}
+                className="bg-[#6cd454] w-full sm:w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black hover:bg-[#aae49d] duration-300 transition-all"
+              >
+                View Previous Generations
+              </button>
+            )}
+          </div>
+        ) : null}
         {viewPreviousImages && !isFAQOpen && (
           <div className="fixed inset-0 flex items-center bg-black/50 justify-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-lg relative" style={{backgroundColor: "#ffffff"}}>
+            <div
+              className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-lg relative"
+              style={{ backgroundColor: "#ffffff" }}
+            >
               <button
                 onClick={ClosePreviousImages}
                 className="absolute top-2 right-2 text-red-500 cursor-pointer text-xl font-bold"
@@ -411,7 +423,9 @@ const User = () => {
                       key={index}
                       src={img.generatedImageName}
                       alt={`Image ${index + 1}`}
-                      onClick={() => HandelSelectPreviousImage(img.generatedImageName)}
+                      onClick={() =>
+                        HandelSelectPreviousImage(img.generatedImageName)
+                      }
                       className="w-1/3 max-w-[150px] max-h-[150px] rounded-lg cursor-pointer shadow-lg"
                     />
                   ))
