@@ -38,6 +38,7 @@ const User = () => {
   //const [recaptchaVerified, setRecaptchaVerified] = useState(false);
   const Navigate = useNavigate();
   const canvasRef = useRef(null);
+  const requestRef = useRef(false);
   const storedMobile = localStorage.getItem("userMobile");
   const playerToken = localStorage.getItem("playerToken");
   const { baseUrl } = useBaseUrl();
@@ -191,10 +192,8 @@ const User = () => {
 
   // ---------- Function to Generate Image ----------
   const GenerateImage = async () => {
-    if (isDebounced) return; // Prevent multiple clicks
-  
-    setIsDebounced(true); // Temporarily disable button clicks
-    setTimeout(() => setIsDebounced(false), 2000); // Re-enable after 2 seconds
+    if (requestRef.current) return; // Prevent multiple clicks
+    requestRef.current = true; // Block further clicks
   
     setIsLoad(true);
   
@@ -222,6 +221,7 @@ const User = () => {
       );
       console.error(error);
     } finally {
+      requestRef.current = false; // Allow clicking again
       setIsLoad(false);
     }
   };
