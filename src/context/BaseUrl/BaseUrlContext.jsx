@@ -6,7 +6,7 @@ const BaseUrlContext = createContext(undefined);
 // Create the provider component
 export const BaseUrlProvider = ({ children }) => {
   const [baseUrl, setBaseUrl] = useState(
-    "https://www.keellsavuruduai.keellssuper.com/api"
+    "http://localhost:3300/api"
   );
 
   return (

@@ -49,17 +49,17 @@ const FAQ = () => {
         )}
 
         {/* FAQ Content */}
-        <p>
+        <p className="mb-2">
           Keells Avurudu AI supports English, සිංහල, and தமிழ், ensuring an
           inclusive experience for all users.
         </p>
-        <p>
+        <p className="mb-2">
           To generate high-quality AI images, be specific and detailed in your
           prompt.
         </p>
-        <p>Use Concise and Structured Language</p>
-        <p>❌ "A New Year food table"</p>
-        <p>
+        <p className="mb-2">Use Concise and Structured Language</p>
+        <p className="mb-2">❌ "A New Year food table"</p>
+        <p className="mb-2">
           ✅ "Sinhala New Year feast with kiribath, kokis, kavum, sweet mung
           kavum, fresh fruits, and a glowing clay oil lamp."
         </p>

@@ -156,7 +156,7 @@ const User = () => {
       const file = new File([blob], "generated-image.png", { type: blob.type });
 
       // Define share data with the image file
-      const hashtags = "#KeellsAiAvurudu";
+      const hashtags = "#KeellsAIAvurudu";
       const shareData = {
         title: "Generated Image",
         text: `${hashtags}`,
@@ -174,6 +174,7 @@ const User = () => {
   const GetGenerateAttempts = async () => {
     const data = {
       phoneNumber: storedMobile,
+      playerToken: playerToken,
     };
     try {
       const response = await axios.post(`${baseUrl}/players/getplayer`, data);
@@ -199,7 +200,8 @@ const User = () => {
       const response = await axios.post(`${baseUrl}/image/generateimage`, data);
 
       if (response.data.status) {
-        const imageUrl = `https://www.keellsavuruduai.keellssuper.com/downloads/${response.data.imageName}`;
+        // const imageUrl = `https://www.keellsavuruduai.keellssuper.com/downloads/${response.data.imageName}`;
+        const imageUrl = `http://localhost:3300/downloads/${response.data.imageName}`;
 
         setShowSample(true);
         setGeneratedImage(imageUrl);
@@ -218,6 +220,7 @@ const User = () => {
   const GetPreviousImages = async () => {
     const data = {
       phoneNumber: storedMobile,
+      playerToken: playerToken,
     };
 
     setIsLoad(true);
@@ -229,7 +232,7 @@ const User = () => {
         response.data.images.forEach((item) => {
           tempArr.push({
             ...item, // Spread the existing object properties
-            imageName: `https://www.keellsavuruduai.keellssuper.com/downloads/${item.imageName}`, // Modify imageName
+            generatedImageName: `http://localhost:3300/downloads/${item.generatedImageName}`, // Modify imageName
           });
         });
         console.log(tempArr);
@@ -250,7 +253,7 @@ const User = () => {
         isLoad ? "bg-black/50 z-50" : " z-0"
       }`}
     >
-      <div className=" w-full relative sm:w-[550px] flex flex-col items-center gap-10 md:w-[700px] bg-slate-100 px-8 py-8 lg:w-[800px] rounded-lg shadows-lg justify-center shadow-2xl min-h-[70vh]">
+      <div style={{backgroundColor: "#ffffff"}} className=" w-full relative sm:w-[550px] flex flex-col items-center gap-10 md:w-[700px] bg-slate-100 px-8 py-8 lg:w-[800px] rounded-lg shadows-lg justify-center shadow-2xl min-h-[70vh]">
         <button
           onClick={HandelLogOutButon}
           className="cursor-pointer w-[40px] h-[40px] sm:w-[45px] sm:h-[45px] flex items-center justify-center text-2xl sm:text-3xl bg-[#c1d6bb] text-slate-900 hover:text-red-500 transition-all duration-300 rounded-lg font-semibold z-50 absolute top-5 right-5"
@@ -394,7 +397,7 @@ const User = () => {
         </div>
         {viewPreviousImages && !isFAQOpen && (
           <div className="fixed inset-0 flex items-center bg-black/50 justify-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-lg relative">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-lg relative" style={{backgroundColor: "#ffffff"}}>
               <button
                 onClick={ClosePreviousImages}
                 className="absolute top-2 right-2 text-red-500 cursor-pointer text-xl font-bold"
@@ -406,9 +409,9 @@ const User = () => {
                   prevImages.map((img, index) => (
                     <img
                       key={index}
-                      src={img.imageName}
+                      src={img.generatedImageName}
                       alt={`Image ${index + 1}`}
-                      onClick={() => HandelSelectPreviousImage(img.imageName)}
+                      onClick={() => HandelSelectPreviousImage(img.generatedImageName)}
                       className="w-1/3 max-w-[150px] max-h-[150px] rounded-lg cursor-pointer shadow-lg"
                     />
                   ))
