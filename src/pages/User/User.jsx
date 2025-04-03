@@ -34,6 +34,7 @@ const User = () => {
   const [prevImages, setPrevImages] = useState([]);
   const [generatedImage, setGeneratedImage] = useState(null); // here sample image measn generated image
   const [isOpenShareIcons, setIsOpenShareIcons] = useState(false);
+  const [isDebounced, setIsDebounced] = useState(false);
   //const [recaptchaVerified, setRecaptchaVerified] = useState(false);
   const Navigate = useNavigate();
   const canvasRef = useRef(null);
@@ -190,19 +191,24 @@ const User = () => {
 
   // ---------- Function to Generate Image ----------
   const GenerateImage = async () => {
+    if (isDebounced) return; // Prevent multiple clicks
+  
+    setIsDebounced(true); // Temporarily disable button clicks
+    setTimeout(() => setIsDebounced(false), 2000); // Re-enable after 2 seconds
+  
+    setIsLoad(true);
+  
     const data = {
       userPrompt: prompt,
       playerToken: playerToken,
       phoneNumber: storedMobile,
     };
-    setIsLoad(true);
+  
     try {
       const response = await axios.post(`${baseUrl}/image/generateimage`, data);
-
+  
       if (response.data.status) {
         const imageUrl = `https://www.keellsavuruduai.keellssuper.com/downloads/${response.data.imageName}`;
-        // const imageUrl = `http://localhost:3300/downloads/${response.data.imageName}`;
-
         setShowSample(true);
         setGeneratedImage(imageUrl);
       } else {
@@ -216,7 +222,7 @@ const User = () => {
       );
       console.error(error);
     } finally {
-      setIsLoad(false); // Ensure loading stops after request is completed
+      setIsLoad(false);
     }
   };
 
