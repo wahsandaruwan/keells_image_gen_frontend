@@ -207,6 +207,7 @@ const User = () => {
       const response = await axios.post(`${baseUrl}/image/generateimage`, data);
   
       if (response.data.status) {
+        // const imageUrl = `http://localhost:3300/downloads/${response.data.imageName}`;
         const imageUrl = `https://www.keellsavuruduai.keellssuper.com/downloads/${response.data.imageName}`;
         setShowSample(true);
         setGeneratedImage(imageUrl);
