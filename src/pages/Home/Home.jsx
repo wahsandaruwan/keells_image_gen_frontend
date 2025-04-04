@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Images, Animations } from "../../constants";
+import ReactGA from "react-ga4";
 import { useNavigate } from "react-router";
 import Lottie from "lottie-react";
 import { Recaptcha, FAQ } from "../../components/atoms";
@@ -120,6 +121,12 @@ const Home = () => {
 
       if (response.data.status) {
         //ValidateOTPCode();
+        // Send a custom event
+        ReactGA.event({
+          category: "Authentication",
+          action: "OTP sent",
+          label: "Successfull OTP sent",
+        });
       }
     } catch (error) {
       console.error(error);
@@ -177,6 +184,11 @@ const Home = () => {
         localStorage.setItem("playerName", response.data.user.name);
         localStorage.setItem("userMobile", response.data.user.phoneNumber);
         Navigate("/user");
+        ReactGA.event({
+          category: "Authentication",
+          action: "Login",
+          label: "Successfull Login",
+        });
         return;
       }
     } catch (error) {

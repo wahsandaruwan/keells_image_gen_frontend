@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Images, Animations } from "../../constants";
 import Lottie from "lottie-react";
+import ReactGA from "react-ga4";
 import { useNavigate } from "react-router";
 import { FAQ } from "../../components/atoms";
 import { UserNameValidation } from "../../validations";
@@ -72,6 +73,11 @@ const Register = () => {
         localStorage.setItem("playerToken", response.data.user.playerToken);
         localStorage.setItem("playerName", response.data.user.name);
         Navigate("/user");
+        ReactGA.event({
+          category: "Authentication",
+          action: "Registration",
+          label: "Successfull Registration",
+        });
         return;
       }
     } catch (error) {

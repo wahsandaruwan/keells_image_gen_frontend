@@ -3,6 +3,7 @@ import { Images, Animations } from "../../constants";
 //import Lottie from "lottie-react";
 import { useNavigate } from "react-router";
 import { Loader } from "../../components/atoms";
+import ReactGA from "react-ga4";
 import {
   EmailShareButton,
   FacebookShareButton,
@@ -165,6 +166,13 @@ const User = () => {
         files: [file], // Attach the actual image file
       };
 
+      // Send a custom event
+      ReactGA.event({
+        category: "Share",
+        action: "Social Media Share",
+        label: "Share Attempt",
+      });
+
       // Share the image
       await navigator.share(shareData);
     } catch (error) {
@@ -194,32 +202,51 @@ const User = () => {
   const GenerateImage = async () => {
     if (requestRef.current) return; // Prevent multiple clicks
     requestRef.current = true; // Block further clicks
-  
+
     setIsLoad(true);
-  
+
     const data = {
       userPrompt: prompt,
       playerToken: playerToken,
       phoneNumber: storedMobile,
     };
-  
+
     try {
       const response = await axios.post(`${baseUrl}/image/generateimage`, data);
-  
+
       if (response.data.status) {
         // const imageUrl = `http://localhost:3300/downloads/${response.data.imageName}`;
         const imageUrl = `https://www.keellsavuruduai.keellssuper.com/downloads/${response.data.imageName}`;
         setShowSample(true);
         setGeneratedImage(imageUrl);
+
+        // Send a custom event
+        ReactGA.event({
+          category: "Image Generation",
+          action: "Generated Image",
+          label: "Successfull Image Generation",
+        });
       } else {
         alert(
           "Unable to show generated image. We're committed to making the Keells Avurudu AI experience safe & enjoyable. Please try rephrasing your prompt."
         );
+        // Send a custom event
+        ReactGA.event({
+          category: "Image Generation",
+          action: "Failed Image",
+          label: "Failed Image Generation",
+        });
       }
     } catch (error) {
       alert(
         "Unable to show generated image. We're committed to making the Keells Avurudu AI experience safe & enjoyable. Please try rephrasing your prompt."
       );
+      // Send a custom event
+      ReactGA.event({
+        category: "Image Generation",
+        action: "Failed Image",
+        label: "Failed Image Generation",
+      });
       console.error(error);
     } finally {
       requestRef.current = false; // Allow clicking again
