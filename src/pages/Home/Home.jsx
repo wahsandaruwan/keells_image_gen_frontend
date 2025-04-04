@@ -71,7 +71,9 @@ const Home = () => {
       .then(([headerData]) => {
         setSunAnimation(headerData);
       })
-      .catch((error) => console.error("Failed to load animations:", error));
+      .catch((error) => {
+        // console.error("Failed to load animations:", error)
+      });
   }, []);
 
   const HandleOtpChange = (index, value) => {
@@ -96,7 +98,7 @@ const Home = () => {
     try {
       const response = await axios.post(`${baseUrl}/players/checkphone`, data);
 
-      console.log(response);
+      // console.log(response);
       if (response.data.status) {
         setMobileStatus(response.data.phoneExist);
         setIsOTPOpen(false);
@@ -106,7 +108,7 @@ const Home = () => {
         return;
       }
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     }
   };
 
@@ -129,7 +131,7 @@ const Home = () => {
         });
       }
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     }
   };
 
@@ -148,7 +150,7 @@ const Home = () => {
       phoneNumber: mobile,
       otpCode: OTP.join(""),
     };
-    console.log(data);
+    // console.log(data);
     try {
       const response = await axios.post(`${baseUrl}/otp/validateotp`, data);
 
@@ -167,7 +169,7 @@ const Home = () => {
       }
     } catch (error) {
       alert(error.response.data.message);
-      console.error(error);
+      // console.error(error);
     }
   };
 
@@ -192,7 +194,7 @@ const Home = () => {
         return;
       }
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     }
   };
 

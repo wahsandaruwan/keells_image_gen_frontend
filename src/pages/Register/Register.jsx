@@ -36,7 +36,9 @@ const Register = () => {
       .then(([headerData]) => {
         setSunAnimation(headerData);
       })
-      .catch((error) => console.error("Failed to load animations:", error));
+      .catch((error) => {
+        // console.error("Failed to load animations:", error)
+      });
   }, []);
 
   const HandelRegisterButton = () => {

@@ -176,7 +176,7 @@ const User = () => {
       // Share the image
       await navigator.share(shareData);
     } catch (error) {
-      console.error("Error sharing image:", error);
+      // console.error("Error sharing image:", error);
     }
   };
 
@@ -194,7 +194,7 @@ const User = () => {
       }
     } catch (error) {
       alert(error.response.data.message);
-      console.error(error);
+      // console.error(error);
     }
   };
 
@@ -247,7 +247,7 @@ const User = () => {
         action: "Failed Image",
         label: "Failed Image Generation",
       });
-      console.error(error);
+      // console.error(error);
     } finally {
       requestRef.current = false; // Allow clicking again
       setIsLoad(false);
@@ -273,13 +273,13 @@ const User = () => {
             generatedImageName: `https://www.keellsavuruduai.keellssuper.com/downloads/${item.generatedImageName}`, // Modify imageName
           });
         });
-        console.log(tempArr);
+        // console.log(tempArr);
         setPrevImages(tempArr);
       } else {
         setPrevImages([]);
       }
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     } finally {
       setIsLoad(false); // Ensure loading stops after request is completed
     }

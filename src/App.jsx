@@ -6,7 +6,7 @@ import ReactGA from "react-ga4";
 
 function App() {
   useEffect(() => {
-    ReactGA.initialize("G-KD7MPPY4H9");
+    ReactGA.initialize(import.meta.env.VITE_GA_KEY);
 
     // Send pageview with a custom path
     ReactGA.send({

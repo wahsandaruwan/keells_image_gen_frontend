@@ -4,7 +4,6 @@ import ReCAPTCHA from "react-google-recaptcha";
 const Recaptcha = ({ onVerify }) => {
   const [Verified, setVerified] = useState(false);
   const SiteKey = import.meta.env.VITE_SITE_KEY;
-  console.log(SiteKey);
 
   const HandleRecaptchaChange = (token) => {
     if (token) {
