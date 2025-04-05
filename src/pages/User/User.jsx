@@ -147,7 +147,7 @@ const User = () => {
   //   }
   // };
 
-  const HandelShareButtonClick = async () => {
+  const HandelShareImageFileButtonClick = async () => {
     if (!generatedImage) return;
 
     try {
@@ -179,6 +179,53 @@ const User = () => {
       // console.error("Error sharing image:", error);
     }
   };
+
+  // ---------- Function to share  image as url ----------
+  const HandleShareImageLinkButtonClick = async () => {
+    if (!generatedImage) return;
+  
+    try {
+      // Define share data with the image URL
+      const hashtags = "#KeellsAIAvurudu";
+      const shareData = {
+        title: "Generated Image",
+        text: `${hashtags}`, // Add the hashtags or custom text
+        url: generatedImage,  // Share the URL link
+      };
+  
+      // Send a custom event
+      ReactGA.event({
+        category: "Share",
+        action: "Social Media Share",
+        label: "Share Attempt",
+      });
+  
+      // Share the link (this works on supported platforms like mobile browsers)
+      await navigator.share(shareData);
+    } catch (error) {
+      // Handle errors (if any) when sharing
+      //console.error(error);
+    }
+  };
+
+  // ---------- Function to Download Image ----------
+  const DownloadImageButtonClick = (imageUrl) => {
+    fetch(imageUrl)
+    .then(response => response.blob())
+    .then(blob => {
+      let blobUrl = window.URL.createObjectURL(blob);
+      let a = document.createElement('a');
+      a.download = imageUrl.replace(/^.*[\\\/]/, ''); // Get image name
+      a.href = blobUrl;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    })
+    .catch(error => {
+      console.error('Error downloading image:', error);
+    });
+  }
+  
 
   // Function to get generate attempts count
   const GetGenerateAttempts = async () => {
@@ -409,12 +456,32 @@ const User = () => {
           <div className="w-full flex  flex-col items-center gap-5">
             {showSample && !isFAQOpen && (
               <button
-                onClick={HandelShareButtonClick}
+                onClick={HandelShareImageFileButtonClick}
                 className={`bg-[#6cd454] w-full sm:w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black hover:bg-[#aae49d] duration-300 transition-all ${
                   isOpenShareIcons ? "hidden" : ""
                 }`}
               >
-                Share
+                Share Image
+              </button>
+            )}
+            {showSample && !isFAQOpen && (
+              <button
+                onClick={HandleShareImageLinkButtonClick}
+                className={`bg-[#6cd454] w-full sm:w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black hover:bg-[#aae49d] duration-300 transition-all ${
+                  isOpenShareIcons ? "hidden" : ""
+                }`}
+              >
+                Share Image Link
+              </button>
+            )}
+            {showSample && !isFAQOpen && (
+              <button
+                onClick={() => DownloadImageButtonClick(generatedImage)}
+                className={`bg-[#6cd454] w-full sm:w-2/3 px-5 py-3 rounded-lg text-white text-[16px] cursor-pointer font-bold hover:text-black hover:bg-[#aae49d] duration-300 transition-all ${
+                  isOpenShareIcons ? "hidden" : ""
+                }`}
+              >
+               Download
               </button>
             )}
             {!isFAQOpen && !isLoad && (
